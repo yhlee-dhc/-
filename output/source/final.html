@@ -450,9 +450,10 @@ window.renderAt = function (out) {
   camera.position.copy(cp); camera.lookAt(cq);
   opening.visible = t < TSW;
   if (t < TSW) { // front view: film placed over the gum and the upper half of a tooth, then push in
-    const u = clamp(t / TSW); const e = u < 0.45 ? 0.25 * eio(u / 0.45) : 0.25 + 0.75 * eic((u - 0.45) / 0.55);
-    camera.position.set(lerp(0.3, OF.x + 0.15, e), lerp(-0.3, 0.3, e), OZ + lerp(5.2, 1.35, e));
-    camera.lookAt(lerp(0.25, OF.x + 0.02, e), lerp(-0.3, 0.2, e), OZ + lerp(0, 0.3, e));
+    const u = clamp(t / TSW); const e = u < 0.45 ? 0.3 * eio(u / 0.45) : 0.3 + 0.7 * eic((u - 0.45) / 0.55);
+    // close-up of the upper-left teeth (viewer's right), slightly from the side, then push in to the film
+    camera.position.set(OF.x + lerp(1.0, 0.15, e), lerp(0.38, 0.3, e), OZ + lerp(3.05, 1.35, e));
+    camera.lookAt(OF.x + lerp(0.25, 0.02, e), lerp(0.3, 0.2, e), OZ + lerp(0.0, 0.3, e));
   }
   camera.updateMatrixWorld();
   finalPass.uniforms.uWhite.value = 0.92 * sstep(TSW - 0.2, TSW, t) * (1 - sstep(TSW, TSW + 0.25, t));
