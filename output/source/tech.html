@@ -12,85 +12,75 @@ canvas{display:block;position:absolute;left:0;top:0}
 #ui{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;font-family:KRL,KR,sans-serif;color:#4a2a33;pointer-events:none}
 #ui *{box-sizing:border-box}
 .a{position:absolute;opacity:0;will-change:transform,opacity}
-.chip{display:flex;align-items:center;gap:14px;padding:14px 30px 14px 16px;border-radius:999px;background:rgba(255,255,255,.88);box-shadow:0 8px 30px rgba(190,70,80,.18),inset 0 0 0 2px rgba(255,255,255,.9);font-weight:900;font-size:34px;letter-spacing:-.5px;color:#5b2733}
-.chip .n{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:28px;background:linear-gradient(135deg,#ff8a7a,#e9507a)}
-.sub{font-weight:700;font-size:25px;color:#7a4450;margin:10px 0 0 22px;text-shadow:0 1px 0 rgba(255,255,255,.7)}
-.card{padding:22px 28px;border-radius:24px;background:rgba(255,255,255,.86);box-shadow:0 10px 36px rgba(190,70,80,.18);}
-.card h3{margin:0 0 6px;font-size:30px;font-weight:900;color:#5b2733;letter-spacing:-.5px}
-.card h3 small{font-size:20px;font-weight:700;color:#9a6a74;margin-left:8px}
-.card p{margin:0;font-size:23px;font-weight:700;color:#7a4450;line-height:1.45}
-.legend{display:flex;gap:26px;margin-top:12px;font-size:21px;font-weight:700;color:#7a4450}
+.chip{display:inline-flex;align-items:center;gap:18px;padding:16px 40px 16px 18px;border-radius:999px;background:#fff;box-shadow:0 10px 34px rgba(200,40,80,.28);font-weight:900;font-size:48px;letter-spacing:-1px;color:#3a0f22}
+.chip .n{width:66px;height:66px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:38px;background:linear-gradient(135deg,#ff6f61,#e8336f)}
+.sub{display:inline-block;font-weight:900;font-size:38px;color:#fff;margin:14px 0 0 10px;padding:8px 22px;border-radius:14px;background:rgba(80,14,40,.72)}
+.card{padding:26px 34px;border-radius:28px;background:rgba(255,255,255,.96);box-shadow:0 12px 40px rgba(200,40,80,.25);border-left:10px solid #e8336f}
+.card h3{margin:0;font-size:46px;font-weight:900;color:#3a0f22;letter-spacing:-1px}
+.card h3 small{font-size:24px;font-weight:700;color:#8a4a5c;margin-left:10px}
+.card p{margin:0;font-size:31px;font-weight:700;color:#3a0f22;line-height:1.45}
+.legend{display:flex;gap:32px;margin-top:14px;font-size:27px;font-weight:900;color:#5a1a33}
 .legend i{display:inline-block;vertical-align:middle;margin-right:8px}
-.row{display:flex;align-items:center;gap:18px;width:520px;padding:12px 18px;border-radius:20px;background:rgba(255,255,255,.84);box-shadow:0 6px 24px rgba(190,70,80,.15)}
-.dot{width:54px;height:54px;border-radius:50%;flex:none;box-shadow:inset -6px -8px 14px rgba(0,0,0,.12),inset 6px 6px 10px rgba(255,255,255,.8),0 0 18px var(--c)}
-.row b{display:block;font-size:27px;font-weight:900;color:#4e2530;letter-spacing:-.5px}
-.row b small{font-size:17px;font-weight:700;color:#9a6a74;margin-left:6px}
-.row span{display:block;font-size:20px;font-weight:700;color:#7a4450;margin-top:2px}
-.row .ax{margin-left:auto;font-size:16px;font-weight:900;color:#fff;padding:6px 12px;border-radius:999px;white-space:nowrap}
-.graph{width:520px;padding:16px 20px 12px;border-radius:22px;background:rgba(255,255,255,.86);box-shadow:0 8px 30px rgba(190,70,80,.16)}
-.graph .t{font-size:22px;font-weight:900;color:#5b2733}
-.graph .t small{font-size:16px;color:#9a6a74;font-weight:700;margin-left:6px}
-.surf{font-size:24px;font-weight:900;color:#fff;padding:10px 22px;border-radius:999px;background:linear-gradient(90deg,#ff7d8f,#ff9f6e);box-shadow:0 6px 22px rgba(230,80,90,.35);white-space:nowrap}
-.lab{transform:translate(-50%,-50%);text-align:center;font-weight:900;font-size:34px;color:#4e2530;text-shadow:0 2px 0 rgba(255,255,255,.85),0 0 18px rgba(255,255,255,.9);white-space:nowrap;letter-spacing:-.5px}
-.lab small{display:block;font-size:19px;font-weight:700;color:#80505a;text-shadow:0 1px 0 rgba(255,255,255,.9)}
-.axis{transform:translateX(-50%);display:flex;align-items:center;gap:10px;padding:12px 26px;border-radius:999px;background:rgba(255,255,255,.9);box-shadow:0 6px 24px rgba(190,70,80,.18);font-weight:900;font-size:27px;color:#5b2733;white-space:nowrap}
-.axis i{width:16px;height:16px;border-radius:50%;display:inline-block}
-.tag{left:50%;transform:translateX(-50%);padding:14px 40px;border-radius:999px;background:rgba(91,39,51,.82);color:#fff;font-weight:900;font-size:30px;letter-spacing:-.3px;white-space:nowrap}
-.tag em{font-style:normal;color:#ffd36a}
+.row{display:flex;align-items:center;gap:22px;width:560px;padding:12px 22px;border-radius:24px;background:rgba(255,255,255,.96);box-shadow:0 8px 28px rgba(200,40,80,.22)}
+.dot{width:70px;height:70px;border-radius:50%;flex:none;box-shadow:inset -6px -8px 14px rgba(0,0,0,.12),inset 6px 6px 10px rgba(255,255,255,.8),0 0 18px var(--c)}
+.row b{display:block;font-size:44px;font-weight:900;color:#3a0f22;letter-spacing:-1px;line-height:1.15}
+.row b small{font-size:21px;font-weight:700;color:#8a4a5c;margin-left:8px;letter-spacing:0}
+.row span{display:block;font-size:32px;font-weight:900;color:#c2185b;margin-top:2px;letter-spacing:-.5px}
+.row .ax{margin-left:auto;font-size:22px;font-weight:900;color:#fff;padding:8px 16px;border-radius:999px;white-space:nowrap}
+.graph{width:640px;padding:18px 24px 12px;border-radius:26px;background:rgba(255,255,255,.96);box-shadow:0 10px 34px rgba(200,40,80,.22)}
+.graph .t{font-size:32px;font-weight:900;color:#3a0f22;letter-spacing:-.5px}
+.graph .t small{font-size:21px;color:#8a4a5c;font-weight:700;margin-left:8px}
+.surf{font-size:42px;font-weight:900;color:#fff;padding:14px 32px;border-radius:999px;background:linear-gradient(90deg,#e8336f,#ff7a3d);box-shadow:0 6px 22px rgba(230,80,90,.35);white-space:nowrap}
+.lab{transform:translate(-50%,-50%);text-align:center;font-weight:900;font-size:52px;color:#3a0f22;text-shadow:0 2px 0 #fff,0 0 14px #fff,0 0 28px rgba(255,255,255,.9);white-space:nowrap;letter-spacing:-.5px}
+.lab small{display:block;font-size:24px;font-weight:900;color:#8a3a55;text-shadow:0 1px 0 rgba(255,255,255,.9)}
+.axis{transform:translateX(-50%);display:flex;align-items:center;gap:12px;padding:14px 34px;border-radius:999px;background:#fff;box-shadow:0 8px 28px rgba(200,40,80,.25);font-weight:900;font-size:42px;color:#3a0f22;white-space:nowrap}
+.axis i{width:22px;height:22px;border-radius:50%;display:inline-block}
+.tag{left:50%;transform:translateX(-50%);padding:18px 56px;border-radius:999px;background:linear-gradient(90deg,#b0124f,#e8336f);box-shadow:0 10px 34px rgba(200,40,80,.35);color:#fff;font-weight:900;font-size:42px;letter-spacing:-.3px;white-space:nowrap}
+.tag em{font-style:normal;color:#ffe066}
 .note{font-size:16px;font-weight:700;color:rgba(90,40,50,.55)}
 </style>
 <script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
 </head><body>
 <div id="ui">
-  <!-- stage chips -->
-  <div class="a" id="st1" style="left:60px;top:56px"><div class="chip"><span class="n">1</span>HPMC 수화 · 겔층 형성</div><div class="sub">침(수분)을 만나 필름이 팽윤하며 겔로 전환</div></div>
-  <div class="a" id="st2" style="left:60px;top:56px"><div class="chip"><span class="n">2</span>점막 부착 · 잇몸 곡면 밀착</div><div class="sub">HPMC 사슬이 점액층과 얽혀 밴드처럼 고정</div></div>
-  <div class="a" id="st3" style="left:60px;top:56px"><div class="chip"><span class="n">3</span>점진적 방출</div><div class="sub">겔층을 따라 성분이 단계적으로 천천히 이동</div></div>
-  <!-- HPMC card -->
-  <div class="a card" id="hp" style="left:60px;top:780px;width:760px">
-    <h3>HPMC<small>Hydroxypropyl Methylcellulose</small></h3>
-    <p>수분을 흡수해 팽윤 → 점착성 겔 네트워크 형성<br>성분을 겔 속에 붙잡아 두는 ‘저장고’ 역할</p>
-    <div class="legend"><span><i style="width:34px;height:6px;border-radius:3px;background:#f4c45a;box-shadow:0 0 8px #ffd77a"></i>HPMC 고분자 사슬</span><span><i style="width:14px;height:14px;border-radius:50%;background:#55b8ff"></i>수분</span></div>
+  <div class="a" id="st1" style="left:56px;top:50px"><div class="chip"><span class="n">1</span>HPMC 수화</div><br><div class="sub">수분 흡수 → 겔층 형성</div></div>
+  <div class="a" id="st2" style="left:56px;top:50px"><div class="chip"><span class="n">2</span>점막 부착</div><br><div class="sub">잇몸 곡면 밀착</div></div>
+  <div class="a" id="st3" style="left:56px;top:50px"><div class="chip"><span class="n">3</span>점진적 방출</div><br><div class="sub">단계별 · 지속 방출</div></div>
+  <div class="a card" id="hp" style="left:56px;top:800px">
+    <h3>HPMC = 겔 저장고</h3>
+    <div class="legend"><span><i style="width:44px;height:8px;border-radius:4px;background:#ffe9b8;box-shadow:0 0 0 2px #e0a020"></i>HPMC 사슬</span><span><i style="width:20px;height:20px;border-radius:50%;background:#45c2ff"></i>수분</span></div>
   </div>
-  <div class="a card" id="ad" style="left:60px;top:820px;width:760px">
-    <h3>점막 부착 (Mucoadhesion)</h3>
-    <p>팽윤한 HPMC 사슬이 잇몸 점액층과 서로 얽혀<br>곡면에 빈틈없이 밀착 · 쉽게 떨어지지 않음</p>
-  </div>
-  <!-- ingredient rows -->
-  <div class="a row" id="r0" style="left:1350px;top:180px"><div class="dot" style="--c:#cfd3de;background:#cfd3de"></div><div><b>산화아연<small>Zinc Oxide</small></b><span>치면세균막 관리</span></div><div class="ax" style="background:#8c93a6">세균막</div></div>
-  <div class="a row" id="r1" style="left:1350px;top:282px"><div class="dot" style="--c:#c9a3ff;background:#c9a3ff"></div><div><b>L-아르기닌<small>L-Arginine</small></b><span>치면세균막 관리</span></div><div class="ax" style="background:#8c93a6">세균막</div></div>
-  <div class="a row" id="r2" style="left:1350px;top:384px"><div class="dot" style="--c:#ffb36e;background:#ffb36e"></div><div><b>비타민 C<small>Vitamin C</small></b><span>잇몸조직 항산화 영양</span></div><div class="ax" style="background:#f08a3c">영양</div></div>
-  <div class="a row" id="r3" style="left:1350px;top:486px"><div class="dot" style="--c:#8ed8ff;background:#8ed8ff"></div><div><b>히알루론산<small>Hyaluronic Acid</small></b><span>구강점막 수분 보습</span></div><div class="ax" style="background:#3aa7e0">보습</div></div>
-  <div class="a row" id="r4" style="left:1350px;top:588px"><div class="dot" style="--c:#9ff2b6;background:#9ff2b6"></div><div><b>베타인<small>Betaine</small></b><span>점막 수분친화 · 편안한 사용감</span></div><div class="ax" style="background:#3aa7e0">보습</div></div>
-  <!-- release graph -->
-  <div class="a graph" id="gr" style="left:1350px;top:712px">
-    <div class="t">시간에 따른 누적 방출<small>개념 모식도</small></div>
-    <svg width="480" height="230" viewBox="0 0 480 230" style="display:block;margin-top:6px">
+  <div class="a card" id="ad" style="left:56px;top:860px"><h3>사슬 + 점액층 결합</h3></div>
+  <div class="a row" id="r0" style="left:1300px;top:200px"><div class="dot" style="--c:#c6ccdc;background:#c6ccdc"></div><div><b>산화아연</b><span>세균막 관리</span></div></div>
+  <div class="a row" id="r1" style="left:1300px;top:326px"><div class="dot" style="--c:#b27cff;background:#b27cff"></div><div><b>L-아르기닌</b><span>세균막 관리</span></div></div>
+  <div class="a row" id="r2" style="left:1300px;top:452px"><div class="dot" style="--c:#ff9a3c;background:#ff9a3c"></div><div><b>비타민 C</b><span>항산화 영양</span></div></div>
+  <div class="a row" id="r3" style="left:1300px;top:578px"><div class="dot" style="--c:#45c2ff;background:#45c2ff"></div><div><b>히알루론산</b><span>점막 보습</span></div></div>
+  <div class="a row" id="r4" style="left:1300px;top:704px"><div class="dot" style="--c:#4fe08a;background:#4fe08a"></div><div><b>베타인</b><span>수분 친화</span></div></div>
+  <div class="a graph" id="gr" style="left:56px;top:700px">
+    <div class="t">누적 방출<small>모식도</small></div>
+    <svg width="590" height="250" viewBox="0 0 480 230" style="display:block;margin-top:6px">
       <line x1="44" y1="196" x2="466" y2="196" stroke="#c9a0a8" stroke-width="2"/>
       <line x1="44" y1="14" x2="44" y2="196" stroke="#c9a0a8" stroke-width="2"/>
-      <text x="466" y="222" text-anchor="end" font-size="17" font-weight="700" fill="#9a6a74">시간 →</text>
-      <text x="10" y="18" font-size="17" font-weight="700" fill="#9a6a74">방출</text>
-      <g id="stepTicks" font-size="16" font-weight="900" fill="#c45a6e"></g>
+      <text x="466" y="186" text-anchor="end" font-size="19" font-weight="900" fill="#8a4a5c">시간 →</text>
+      <g id="stepTicks" font-size="19" font-weight="900" fill="#c2185b"></g>
       <path id="burst" d="M44,196 C70,40 90,30 140,28 L466,28" fill="none" stroke="#c9a0a8" stroke-width="3" stroke-dasharray="7 7"/>
-      <text id="burstT" x="150" y="52" font-size="16" font-weight="700" fill="#b08890">즉시 방출형(비교)</text>
+      <text id="burstT" x="150" y="54" font-size="19" font-weight="900" fill="#a07880">즉시형</text>
       <path id="curve" fill="none" stroke="url(#gg)" stroke-width="7" stroke-linecap="round"/>
       <path id="area" fill="url(#ga)" opacity=".55"/>
-      <circle id="mk" r="10" fill="#fff" stroke="#e9507a" stroke-width="5"/>
-      <defs><linearGradient id="gg" x1="0" x2="1"><stop offset="0" stop-color="#ffb36e"/><stop offset=".5" stop-color="#ff7d8f"/><stop offset="1" stop-color="#c9a3ff"/></linearGradient>
+      <circle id="mk" r="10" fill="#fff" stroke="#e8336f" stroke-width="5"/>
+      <defs><linearGradient id="gg" x1="0" x2="1"><stop offset="0" stop-color="#ff9a3c"/><stop offset=".5" stop-color="#e8336f"/><stop offset="1" stop-color="#b27cff"/></linearGradient>
       <linearGradient id="ga" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#ffb3a8"/><stop offset="1" stop-color="#ffb3a8" stop-opacity="0"/></linearGradient></defs>
     </svg>
   </div>
-  <div class="a surf" id="sf">성분은 잇몸 표면에만 머무름 · 조직 내부 침투 없음</div>
-  <!-- finale -->
-  <div class="a axis" id="ax0"><i style="background:#9aa0b4"></i>치면세균막 관리 축</div>
-  <div class="a axis" id="ax1"><i style="background:#ffa25a"></i>잇몸조직 영양 축</div>
-  <div class="a axis" id="ax2"><i style="background:#5cc4f5"></i>구강점막 보습 축</div>
-  <div class="a lab" id="l0">산화아연<small>Zinc Oxide</small></div>
-  <div class="a lab" id="l1">L-아르기닌<small>L-Arginine</small></div>
-  <div class="a lab" id="l2">비타민 C<small>Vitamin C</small></div>
-  <div class="a lab" id="l3">히알루론산<small>Hyaluronic Acid</small></div>
-  <div class="a lab" id="l4">베타인<small>Betaine</small></div>
-  <div class="a tag" id="tg" style="top:930px"><em>HPMC 겔층</em> · 점진적 방출 · 잇몸 표면 작용</div>
+  <div class="a surf" id="sf">표면 작용 · 조직 침투 ✕</div>
+  <div class="a axis" id="ax0"><i style="background:#9aa0b4"></i>세균막 관리</div>
+  <div class="a axis" id="ax1"><i style="background:#ff9a3c"></i>잇몸 영양</div>
+  <div class="a axis" id="ax2"><i style="background:#45c2ff"></i>점막 보습</div>
+  <div class="a lab" id="l0">산화아연</div>
+  <div class="a lab" id="l1">L-아르기닌</div>
+  <div class="a lab" id="l2">비타민 C</div>
+  <div class="a lab" id="l3">히알루론산</div>
+  <div class="a lab" id="l4">베타인</div>
+  <div class="a tag" id="tg" style="top:920px"><em>HPMC 겔층</em> · 점진적 방출 · 표면 작용</div>
 </div>
 <script type="module">
 import * as THREE from 'three';
@@ -116,7 +106,7 @@ let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 21474836
 const R = (a, b) => a + (b - a) * rnd();
 const win = (t, a, b, f = 0.3) => sstep(a, a + f, t) * (1 - sstep(b - f, b, t));
 
-const ys = x => 1.0 - 0.06 * x * x;
+const ys = x => 1.0 - 0.14 * x * x;
 const MUC = 0.06, FW = 1.6;
 
 // ---------- timeline ----------
@@ -131,23 +121,23 @@ const T = {
 // ---------- renderer ----------
 const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
 renderer.setPixelRatio(1); renderer.setSize(W, H);
-renderer.toneMapping = THREE.NeutralToneMapping; renderer.toneMappingExposure = 0.92;
+renderer.toneMapping = THREE.NeutralToneMapping; renderer.toneMappingExposure = 0.88;
 document.body.insertBefore(renderer.domElement, document.getElementById('ui'));
 const scene = new THREE.Scene();
 const pmrem = new THREE.PMREMGenerator(renderer);
 scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-scene.environmentIntensity = 0.75;
+scene.environmentIntensity = 0.6;
 (function () {
   const c = document.createElement('canvas'); c.width = 512; c.height = 288; const g = c.getContext('2d');
-  const lg = g.createLinearGradient(0, 0, 0, 288); lg.addColorStop(0, '#ffe3dc'); lg.addColorStop(0.55, '#ffb9ae'); lg.addColorStop(1, '#f2938c');
+  const lg = g.createLinearGradient(0, 0, 0, 288); lg.addColorStop(0, '#ffd2c8'); lg.addColorStop(0.55, '#ff9f98'); lg.addColorStop(1, '#ee6f82');
   g.fillStyle = lg; g.fillRect(0, 0, 512, 288);
-  const rg = g.createRadialGradient(256, 120, 10, 256, 120, 320); rg.addColorStop(0, 'rgba(255,248,240,0.75)'); rg.addColorStop(1, 'rgba(255,240,235,0)');
+  const rg = g.createRadialGradient(256, 120, 10, 256, 120, 320); rg.addColorStop(0, 'rgba(255,240,230,0.55)'); rg.addColorStop(1, 'rgba(255,240,235,0)');
   g.fillStyle = rg; g.fillRect(0, 0, 512, 288);
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; scene.background = t;
 })();
-scene.fog = new THREE.FogExp2(new THREE.Color('#ffc2b8'), 0);
+scene.fog = new THREE.FogExp2(new THREE.Color('#ffaaa0'), 0);
 const camera = new THREE.PerspectiveCamera(35, W / H, 0.01, 100);
-scene.add(new THREE.HemisphereLight('#fff6ee', '#f4a7a7', 1.0));
+scene.add(new THREE.HemisphereLight('#fff4ec', '#f08a9a', 0.8));
 const key = new THREE.DirectionalLight('#fff3e0', 2.4); key.position.set(3, 6, 6); scene.add(key);
 const rim = new THREE.DirectionalLight('#ffc57a', 3.2); rim.position.set(-4, 3.5, -5); scene.add(rim);
 const rim2 = new THREE.DirectionalLight('#ffd08a', 1.8); rim2.position.set(5, 2, -4); scene.add(rim2);
@@ -171,7 +161,7 @@ const GX0 = -8, GX1 = 8, GY0 = -6, GY1 = 1.2;
 function tissueTex() {
   const w = 2048, h = 920; const c = document.createElement('canvas'); c.width = w; c.height = h;
   const g = c.getContext('2d'); const id = g.createImageData(w, h);
-  const epi = [248, 160, 166], con = [232, 112, 124], deep = [214, 92, 108];
+  const epi = [255, 150, 160], con = [236, 86, 110], deep = [205, 58, 92];
   for (let py = 0; py < h; py++) for (let px = 0; px < w; px++) {
     const x = GX0 + (px / w) * (GX1 - GX0), y = GY1 - (py / h) * (GY1 - GY0); const d = ys(x) - y;
     let col;
@@ -195,7 +185,7 @@ function profileShape(topFn, botFn, x0, x1, n = 160) {
 function extrude(shape) { const g = new THREE.ExtrudeGeometry(shape, { depth: 1, bevelEnabled: false, steps: 1, curveSegments: 1 }); g.translate(0, 0, -1); return g; }
 const gumBump = noiseTex(256, 1.5); gumBump.repeat.set(3, 8);
 const gumCap = new THREE.MeshPhysicalMaterial({ map: tissueTex(), roughness: 0.55, clearcoat: 0.3, clearcoatRoughness: 0.4, sheen: 0.4, sheenColor: new THREE.Color('#ffd0d4') });
-const gumSide = new THREE.MeshPhysicalMaterial({ color: '#f2838b', roughness: 0.42, clearcoat: 0.9, clearcoatRoughness: 0.18, bumpMap: gumBump, bumpScale: 1.2, sheen: 0.6, sheenColor: new THREE.Color('#ffd6da') });
+const gumSide = new THREE.MeshPhysicalMaterial({ color: '#f0657a', roughness: 0.42, clearcoat: 0.9, clearcoatRoughness: 0.18, bumpMap: gumBump, bumpScale: 1.2, sheen: 0.6, sheenColor: new THREE.Color('#ffd6da') });
 const gum = new THREE.Mesh(extrude(profileShape(ys, () => -6, -8, 8)), [gumCap, gumSide]); scene.add(gum);
 const mucMat = new THREE.MeshPhysicalMaterial({ color: '#dff2ff', transparent: true, opacity: 0.26, roughness: 0.05, clearcoat: 1, clearcoatRoughness: 0.03, emissive: new THREE.Color('#bfe8ff'), emissiveIntensity: 0.05, depthWrite: false, side: THREE.DoubleSide });
 const mucus = new THREE.Mesh(extrude(profileShape(x => ys(x) + MUC, x => ys(x) + 0.002, -8, 8)), mucMat); mucus.renderOrder = 2; scene.add(mucus);
@@ -238,7 +228,7 @@ const sealAmt = t => t < T.seal0 ? 0 : t > T.seal1 ? 1 : eic((t - T.seal0) / (T.
 const bounce = t => t > T.seal1 ? -0.006 * Math.exp(-(t - T.seal1) * 9) * Math.sin((t - T.seal1) * 38) : 0;
 const swell = t => eio(clamp((t - T.swell0) / (T.swell1 - T.swell0)));
 const edgeF = x => Math.pow(Math.max(0, 1 - Math.pow(Math.abs(x) / FW, 10)), 0.28);
-const filmBottom = (x, t) => lerp(FLAT_B, ys(x) + MUC - 0.002, sealAmt(t)) + bounce(t);
+const filmBottom = (x, t) => lerp(FLAT_B, ys(x) + MUC - 0.002, 0.45 + 0.55 * sealAmt(t)) + bounce(t);
 function filmThick(x, t) {
   const sw = swell(t);
   const breathe = (t > T.swell0 && t < T.seal0) ? 0.006 * Math.sin((t - T.swell0) * Math.PI * 2 * 1.2) * sw : 0;
@@ -279,7 +269,7 @@ const sphereGeo = new THREE.SphereGeometry(1, 20, 14);
 const wat = new THREE.InstancedMesh(sphereGeo, watMat, NWAT); wat.frustumCulled = false; scene.add(wat);
 const waters = []; for (let i = 0; i < NWAT; i++) {
   const side = rnd(); const tx = R(-1.5, 1.5);
-  waters.push({ tx, tu: R(0.05, 0.95), z: R(0.01, 0.034), t0: R(T.swell0 - 0.2, T.swell1 - 0.3), dur: R(0.45, 0.8), sx: side < 0.2 ? -FW - R(0.1, 0.5) : side < 0.4 ? FW + R(0.1, 0.5) : tx + R(-0.15, 0.15), sy: side < 0.4 ? R(0.85, 1.05) : FLAT_B - R(0.02, 0.06), ph: R(0, 6.28), r: R(0.0045, 0.0065) });
+  waters.push({ tx, tu: R(0.05, 0.95), z: R(0.01, 0.034), t0: R(T.swell0 - 0.2, T.swell1 - 0.3), dur: R(0.45, 0.8), sx: side < 0.2 ? -FW - R(0.1, 0.5) : side < 0.4 ? FW + R(0.1, 0.5) : tx + R(-0.15, 0.15), sy: side < 0.4 ? R(0.7, 0.95) : ys(tx) + MUC + R(0.0, 0.03), ph: R(0, 6.28), r: R(0.0045, 0.0065) });
 }
 
 // ---------- saliva droplets ----------
@@ -314,7 +304,7 @@ const pulseL = new THREE.Sprite(spriteMat('#fff4d6')), pulseR = new THREE.Sprite
 scene.add(pulseL, pulseR, pulseC);
 
 // ---------- active ingredients ----------
-const PCOL = ['#cfd3de', '#c9a3ff', '#ffb36e', '#8ed8ff', '#9ff2b6'];
+const PCOL = ['#c6ccdc', '#b27cff', '#ff9a3c', '#45c2ff', '#4fe08a'];
 const pMats = PCOL.map(c => new THREE.MeshPhysicalMaterial({ color: c, roughness: 0.15, clearcoat: 1, clearcoatRoughness: 0.05, emissive: new THREE.Color(c), emissiveIntensity: 0.12 }));
 const PER = 14; const parts = [];
 for (let g = 0; g < 5; g++) for (let k = 0; k < PER; k++) parts.push({ g, x: R(-1.42, 1.42), u: R(0.15, 0.85), r: R(0.016, 0.024), z: R(0.012, 0.03), dx: R(-0.05, 0.05), wob: R(0, 6.28) });
@@ -373,14 +363,14 @@ composer.addPass(finalPass);
 
 // ---------- camera ----------
 const keys = [
-  [0.0, [0.9, 7.6, 10.5], [0, 0.95, 0]],
-  [0.92, [1.95, 1.6, 1.85], [1.45, 1.02, 0.0]],
-  [1.5, [0.2, 1.2, 2.3], [-0.05, 0.93, 0]],
+  [0.0, [0.6, 6.4, 8.6], [0, 0.7, 0]],
+  [0.92, [2.1, 1.5, 2.6], [1.4, 0.85, 0.6]],
+  [1.5, [0.0, 1.15, 2.7], [0, 0.82, 0]],
   [4.55, [-0.4, 1.1, 1.12], [-0.4, 1.0, 0]],
-  [5.15, [0.95, 1.06, 0.95], [0.8, 0.975, 0]],
-  [6.35, [0.72, 1.03, 0.85], [0.64, 0.96, 0]],
-  [6.95, [0.62, 1.12, 1.85], [0.62, 0.93, 0]],
-  [11.85, [0.38, 1.1, 1.7], [0.42, 0.93, 0]],
+  [5.15, [0.95, 1.0, 0.95], [0.8, 0.93, 0]],
+  [6.35, [0.72, 0.99, 0.85], [0.64, 0.93, 0]],
+  [6.95, [0.5, 1.14, 2.15], [0.55, 0.96, 0]],
+  [11.85, [0.32, 1.12, 2.0], [0.42, 0.95, 0]],
   [12.9, [0, 1.75, 7.3], [0, 1.2, 0]],
   [15.0, [0, 1.68, 6.8], [0, 1.2, 0]],
 ];
@@ -418,12 +408,12 @@ window.renderAt = function (t) {
 
   const cutZ = t < T.cut0 ? 14 : t > T.cut1 ? 0 : lerp(14, 0, eio((t - T.cut0) / (T.cut1 - T.cut0)));
   gum.position.z = mucus.position.z = cutZ; gum.scale.z = mucus.scale.z = cutZ + 6;
-  const ff = Math.min(0.6, cutZ); film.position.z = ff; film.scale.z = ff + 0.6;
+  const ff = Math.min(1.5, cutZ); film.position.z = ff; film.scale.z = ff + 1.5;
 
   const sw = swell(t);
-  filmMat.color.set('#eab51a').lerp(tmpC.set('#ffd650'), sw);
+  filmMat.color.set('#f5b000').lerp(tmpC.set('#ffcc1f'), sw);
   filmMat.roughness = lerp(0.88, 0.06, sw); filmMat.clearcoat = sw; filmMat.clearcoatRoughness = 0.04;
-  filmMat.opacity = lerp(1.0, 0.5, sw);
+  filmMat.opacity = lerp(1.0, 0.58, sw);
   filmMat.emissiveIntensity = 0.02 + 0.45 * sw + (t > T.seal1 ? 0.3 * Math.exp(-(t - T.seal1) * 6) : 0);
   filmMat.depthWrite = sw < 0.3;
   const wv = clamp((t - T.swell0) / (T.swell1 - T.swell0));
@@ -477,7 +467,7 @@ window.renderAt = function (t) {
   const pk = clamp((t - T.seal1) / 0.9), pxp = eoc(pk) * 1.7, po = t > T.seal1 ? (1 - pk) : 0;
   pulseL.position.set(-pxp, ys(-pxp) + MUC * 0.6, 0.03); pulseR.position.set(pxp, ys(pxp) + MUC * 0.6, 0.03);
   pulseL.material.opacity = pulseR.material.opacity = 0.9 * po; pulseL.scale.set(0.35, 0.12, 1); pulseR.scale.set(0.35, 0.12, 1);
-  pulseC.position.set(0.66, ys(0.66) + MUC, 0.04); pulseC.material.opacity = 0.8 * (t > T.seal1 ? Math.exp(-(t - T.seal1) * 7) : 0); pulseC.scale.set(0.5, 0.16, 1);
+  pulseC.position.set(0.7, ys(0.7) + MUC, 0.04); pulseC.material.opacity = 0.8 * (t > T.seal1 ? Math.exp(-(t - T.seal1) * 7) : 0); pulseC.scale.set(0.5, 0.16, 1);
 
   // ingredients
   const cnt = [0, 0, 0, 0, 0];
@@ -531,13 +521,13 @@ window.renderAt = function (t) {
   }
   show($('gr'), win(t, 6.95, 11.85)); drawGraph(frontAt(t));
   const sfA = win(t, 10.5, 11.85);
-  { const [sx, sy] = toScreen(new THREE.Vector3(-0.15, ys(-0.15), 0.03)); const el = $('sf'); el.style.left = (sx - 330) + 'px'; el.style.top = (sy + 34) + 'px'; show(el, sfA, 14); }
+  { const [sx, sy] = toScreen(new THREE.Vector3(-0.15, ys(-0.15), 0.03)); const el = $('sf'); el.style.left = Math.max(40, sx - 260) + 'px'; el.style.top = (sy + 40) + 'px'; show(el, sfA, 14); }
   const axA = win(t, 12.75, 15.5); const labA = win(t, 12.55, 15.5);
-  heroes.forEach((h, g) => { const el = $('l' + g); const [x, y] = h.screen; el.style.left = x + 'px'; el.style.top = (y + h.rs + 44) + 'px'; el.style.opacity = labA; });
+  heroes.forEach((h, g) => { const el = $('l' + g); const [x, y] = h.screen; el.style.left = x + 'px'; el.style.top = (y + h.rs + 50) + 'px'; el.style.opacity = labA; });
   const hs = heroes.map(h => h.screen);
   [[0, 1], [2], [3, 4]].forEach((grp, i) => {
     const el = $('ax' + i); const x = grp.reduce((s, g) => s + hs[g][0], 0) / grp.length;
-    el.style.left = x + 'px'; el.style.top = '120px'; el.style.opacity = axA; el.style.transform = `translateX(-50%) translateY(${(1 - axA) * -16}px)`;
+    el.style.left = x + 'px'; el.style.top = '110px'; el.style.opacity = axA; el.style.transform = `translateX(-50%) translateY(${(1 - axA) * -16}px)`;
   });
   { const a = win(t, 13.1, 15.5); const el = $('tg'); el.style.opacity = a; el.style.transform = `translateX(-50%) translateY(${(1 - a) * 18}px)`; }
 
