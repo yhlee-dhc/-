@@ -18,6 +18,10 @@ const srv = http.createServer((q, r) => {
   await page.goto(`http://localhost:${port}/${process.env.PAGE||'index.html'}?w=${w}&h=${h}&dbg=${process.env.DBG||""}`);
   await page.waitForFunction('window.ready === true', null, { timeout: 120000 });
   const times = list ? list.split(',').map(Number) : Array.from({ length: Math.round((+process.env.DUR||7) * fps) }, (_, i) => i / fps);
+  // optional piecewise remap: output seconds -> source timeline seconds
+  const MAP = process.env.MAP ? JSON.parse(process.env.MAP) : null; // [[out,src],...]
+  const remap = o => { for (let k = 0; k < MAP.length - 1; k++) { const [o0, s0] = MAP[k], [o1, s1] = MAP[k + 1]; if (o <= o1) return s0 + (s1 - s0) * (o - o0) / (o1 - o0); } return MAP[MAP.length - 1][1]; };
+  if (MAP) for (let i = 0; i < times.length; i++) times[i] = remap(times[i]);
   const t0 = Date.now();
   for (let i = 0; i < times.length; i++) {
     await page.evaluate(t => window.renderAt(t), times[i]);
