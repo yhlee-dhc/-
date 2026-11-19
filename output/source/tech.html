@@ -1,0 +1,551 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:KRL;font-weight:500;src:url(node_modules/@fontsource/noto-sans-kr/files/noto-sans-kr-latin-500-normal.woff2)}
+@font-face{font-family:KRL;font-weight:700;src:url(node_modules/@fontsource/noto-sans-kr/files/noto-sans-kr-latin-700-normal.woff2)}
+@font-face{font-family:KRL;font-weight:900;src:url(node_modules/@fontsource/noto-sans-kr/files/noto-sans-kr-latin-900-normal.woff2)}
+@font-face{font-family:KR;font-weight:500;src:url(node_modules/@fontsource/noto-sans-kr/files/noto-sans-kr-korean-500-normal.woff2)}
+@font-face{font-family:KR;font-weight:700;src:url(node_modules/@fontsource/noto-sans-kr/files/noto-sans-kr-korean-700-normal.woff2)}
+@font-face{font-family:KR;font-weight:900;src:url(node_modules/@fontsource/noto-sans-kr/files/noto-sans-kr-korean-900-normal.woff2)}
+html,body{margin:0;background:#000;overflow:hidden}
+canvas{display:block;position:absolute;left:0;top:0}
+#ui{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;font-family:KRL,KR,sans-serif;color:#4a2a33;pointer-events:none}
+#ui *{box-sizing:border-box}
+.a{position:absolute;opacity:0;will-change:transform,opacity}
+.chip{display:flex;align-items:center;gap:14px;padding:14px 30px 14px 16px;border-radius:999px;background:rgba(255,255,255,.88);box-shadow:0 8px 30px rgba(190,70,80,.18),inset 0 0 0 2px rgba(255,255,255,.9);font-weight:900;font-size:34px;letter-spacing:-.5px;color:#5b2733}
+.chip .n{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:28px;background:linear-gradient(135deg,#ff8a7a,#e9507a)}
+.sub{font-weight:700;font-size:25px;color:#7a4450;margin:10px 0 0 22px;text-shadow:0 1px 0 rgba(255,255,255,.7)}
+.card{padding:22px 28px;border-radius:24px;background:rgba(255,255,255,.86);box-shadow:0 10px 36px rgba(190,70,80,.18);}
+.card h3{margin:0 0 6px;font-size:30px;font-weight:900;color:#5b2733;letter-spacing:-.5px}
+.card h3 small{font-size:20px;font-weight:700;color:#9a6a74;margin-left:8px}
+.card p{margin:0;font-size:23px;font-weight:700;color:#7a4450;line-height:1.45}
+.legend{display:flex;gap:26px;margin-top:12px;font-size:21px;font-weight:700;color:#7a4450}
+.legend i{display:inline-block;vertical-align:middle;margin-right:8px}
+.row{display:flex;align-items:center;gap:18px;width:520px;padding:12px 18px;border-radius:20px;background:rgba(255,255,255,.84);box-shadow:0 6px 24px rgba(190,70,80,.15)}
+.dot{width:54px;height:54px;border-radius:50%;flex:none;box-shadow:inset -6px -8px 14px rgba(0,0,0,.12),inset 6px 6px 10px rgba(255,255,255,.8),0 0 18px var(--c)}
+.row b{display:block;font-size:27px;font-weight:900;color:#4e2530;letter-spacing:-.5px}
+.row b small{font-size:17px;font-weight:700;color:#9a6a74;margin-left:6px}
+.row span{display:block;font-size:20px;font-weight:700;color:#7a4450;margin-top:2px}
+.row .ax{margin-left:auto;font-size:16px;font-weight:900;color:#fff;padding:6px 12px;border-radius:999px;white-space:nowrap}
+.graph{width:520px;padding:16px 20px 12px;border-radius:22px;background:rgba(255,255,255,.86);box-shadow:0 8px 30px rgba(190,70,80,.16)}
+.graph .t{font-size:22px;font-weight:900;color:#5b2733}
+.graph .t small{font-size:16px;color:#9a6a74;font-weight:700;margin-left:6px}
+.surf{font-size:24px;font-weight:900;color:#fff;padding:10px 22px;border-radius:999px;background:linear-gradient(90deg,#ff7d8f,#ff9f6e);box-shadow:0 6px 22px rgba(230,80,90,.35);white-space:nowrap}
+.lab{transform:translate(-50%,-50%);text-align:center;font-weight:900;font-size:34px;color:#4e2530;text-shadow:0 2px 0 rgba(255,255,255,.85),0 0 18px rgba(255,255,255,.9);white-space:nowrap;letter-spacing:-.5px}
+.lab small{display:block;font-size:19px;font-weight:700;color:#80505a;text-shadow:0 1px 0 rgba(255,255,255,.9)}
+.axis{transform:translateX(-50%);display:flex;align-items:center;gap:10px;padding:12px 26px;border-radius:999px;background:rgba(255,255,255,.9);box-shadow:0 6px 24px rgba(190,70,80,.18);font-weight:900;font-size:27px;color:#5b2733;white-space:nowrap}
+.axis i{width:16px;height:16px;border-radius:50%;display:inline-block}
+.tag{left:50%;transform:translateX(-50%);padding:14px 40px;border-radius:999px;background:rgba(91,39,51,.82);color:#fff;font-weight:900;font-size:30px;letter-spacing:-.3px;white-space:nowrap}
+.tag em{font-style:normal;color:#ffd36a}
+.note{font-size:16px;font-weight:700;color:rgba(90,40,50,.55)}
+</style>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+</head><body>
+<div id="ui">
+  <!-- stage chips -->
+  <div class="a" id="st1" style="left:60px;top:56px"><div class="chip"><span class="n">1</span>HPMC 수화 · 겔층 형성</div><div class="sub">침(수분)을 만나 필름이 팽윤하며 겔로 전환</div></div>
+  <div class="a" id="st2" style="left:60px;top:56px"><div class="chip"><span class="n">2</span>점막 부착 · 잇몸 곡면 밀착</div><div class="sub">HPMC 사슬이 점액층과 얽혀 밴드처럼 고정</div></div>
+  <div class="a" id="st3" style="left:60px;top:56px"><div class="chip"><span class="n">3</span>점진적 방출</div><div class="sub">겔층을 따라 성분이 단계적으로 천천히 이동</div></div>
+  <!-- HPMC card -->
+  <div class="a card" id="hp" style="left:60px;top:780px;width:760px">
+    <h3>HPMC<small>Hydroxypropyl Methylcellulose</small></h3>
+    <p>수분을 흡수해 팽윤 → 점착성 겔 네트워크 형성<br>성분을 겔 속에 붙잡아 두는 ‘저장고’ 역할</p>
+    <div class="legend"><span><i style="width:34px;height:6px;border-radius:3px;background:#f4c45a;box-shadow:0 0 8px #ffd77a"></i>HPMC 고분자 사슬</span><span><i style="width:14px;height:14px;border-radius:50%;background:#55b8ff"></i>수분</span></div>
+  </div>
+  <div class="a card" id="ad" style="left:60px;top:820px;width:760px">
+    <h3>점막 부착 (Mucoadhesion)</h3>
+    <p>팽윤한 HPMC 사슬이 잇몸 점액층과 서로 얽혀<br>곡면에 빈틈없이 밀착 · 쉽게 떨어지지 않음</p>
+  </div>
+  <!-- ingredient rows -->
+  <div class="a row" id="r0" style="left:1350px;top:180px"><div class="dot" style="--c:#cfd3de;background:#cfd3de"></div><div><b>산화아연<small>Zinc Oxide</small></b><span>치면세균막 관리</span></div><div class="ax" style="background:#8c93a6">세균막</div></div>
+  <div class="a row" id="r1" style="left:1350px;top:282px"><div class="dot" style="--c:#c9a3ff;background:#c9a3ff"></div><div><b>L-아르기닌<small>L-Arginine</small></b><span>치면세균막 관리</span></div><div class="ax" style="background:#8c93a6">세균막</div></div>
+  <div class="a row" id="r2" style="left:1350px;top:384px"><div class="dot" style="--c:#ffb36e;background:#ffb36e"></div><div><b>비타민 C<small>Vitamin C</small></b><span>잇몸조직 항산화 영양</span></div><div class="ax" style="background:#f08a3c">영양</div></div>
+  <div class="a row" id="r3" style="left:1350px;top:486px"><div class="dot" style="--c:#8ed8ff;background:#8ed8ff"></div><div><b>히알루론산<small>Hyaluronic Acid</small></b><span>구강점막 수분 보습</span></div><div class="ax" style="background:#3aa7e0">보습</div></div>
+  <div class="a row" id="r4" style="left:1350px;top:588px"><div class="dot" style="--c:#9ff2b6;background:#9ff2b6"></div><div><b>베타인<small>Betaine</small></b><span>점막 수분친화 · 편안한 사용감</span></div><div class="ax" style="background:#3aa7e0">보습</div></div>
+  <!-- release graph -->
+  <div class="a graph" id="gr" style="left:1350px;top:712px">
+    <div class="t">시간에 따른 누적 방출<small>개념 모식도</small></div>
+    <svg width="480" height="230" viewBox="0 0 480 230" style="display:block;margin-top:6px">
+      <line x1="44" y1="196" x2="466" y2="196" stroke="#c9a0a8" stroke-width="2"/>
+      <line x1="44" y1="14" x2="44" y2="196" stroke="#c9a0a8" stroke-width="2"/>
+      <text x="466" y="222" text-anchor="end" font-size="17" font-weight="700" fill="#9a6a74">시간 →</text>
+      <text x="10" y="18" font-size="17" font-weight="700" fill="#9a6a74">방출</text>
+      <g id="stepTicks" font-size="16" font-weight="900" fill="#c45a6e"></g>
+      <path id="burst" d="M44,196 C70,40 90,30 140,28 L466,28" fill="none" stroke="#c9a0a8" stroke-width="3" stroke-dasharray="7 7"/>
+      <text id="burstT" x="150" y="52" font-size="16" font-weight="700" fill="#b08890">즉시 방출형(비교)</text>
+      <path id="curve" fill="none" stroke="url(#gg)" stroke-width="7" stroke-linecap="round"/>
+      <path id="area" fill="url(#ga)" opacity=".55"/>
+      <circle id="mk" r="10" fill="#fff" stroke="#e9507a" stroke-width="5"/>
+      <defs><linearGradient id="gg" x1="0" x2="1"><stop offset="0" stop-color="#ffb36e"/><stop offset=".5" stop-color="#ff7d8f"/><stop offset="1" stop-color="#c9a3ff"/></linearGradient>
+      <linearGradient id="ga" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#ffb3a8"/><stop offset="1" stop-color="#ffb3a8" stop-opacity="0"/></linearGradient></defs>
+    </svg>
+  </div>
+  <div class="a surf" id="sf">성분은 잇몸 표면에만 머무름 · 조직 내부 침투 없음</div>
+  <!-- finale -->
+  <div class="a axis" id="ax0"><i style="background:#9aa0b4"></i>치면세균막 관리 축</div>
+  <div class="a axis" id="ax1"><i style="background:#ffa25a"></i>잇몸조직 영양 축</div>
+  <div class="a axis" id="ax2"><i style="background:#5cc4f5"></i>구강점막 보습 축</div>
+  <div class="a lab" id="l0">산화아연<small>Zinc Oxide</small></div>
+  <div class="a lab" id="l1">L-아르기닌<small>L-Arginine</small></div>
+  <div class="a lab" id="l2">비타민 C<small>Vitamin C</small></div>
+  <div class="a lab" id="l3">히알루론산<small>Hyaluronic Acid</small></div>
+  <div class="a lab" id="l4">베타인<small>Betaine</small></div>
+  <div class="a tag" id="tg" style="top:930px"><em>HPMC 겔층</em> · 점진적 방출 · 잇몸 표면 작용</div>
+</div>
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+
+const params = new URLSearchParams(location.search);
+const W = +(params.get('w') || 1920), H = +(params.get('h') || 1080);
+document.getElementById('ui').style.transform = `scale(${W / 1920})`;
+
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const lerp = (a, b, t) => a + (b - a) * t;
+const sstep = (a, b, x) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
+const eio = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+const eoc = t => 1 - Math.pow(1 - t, 3);
+const eic = t => t * t * t;
+const eob = t => { const c1 = 1.9, c3 = c1 + 1; return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2); };
+let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+const R = (a, b) => a + (b - a) * rnd();
+const win = (t, a, b, f = 0.3) => sstep(a, a + f, t) * (1 - sstep(b - f, b, t));
+
+const ys = x => 1.0 - 0.06 * x * x;
+const MUC = 0.06, FW = 1.6;
+
+// ---------- timeline ----------
+const T = {
+  cut0: 0.8, cut1: 1.38, sweep0: 0.95,
+  drop0: 1.5, drop1: 3.1, swell0: 1.9, swell1: 4.3,
+  str0: 4.8, seal0: 5.15, seal1: 6.0,
+  rel0: 6.85, relDur: 4.4, drift: 0.8,
+  hero: 11.9, fog0: 12.0, fog1: 12.9, flare0: 14.35, END: 15,
+};
+
+// ---------- renderer ----------
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1); renderer.setSize(W, H);
+renderer.toneMapping = THREE.NeutralToneMapping; renderer.toneMappingExposure = 0.92;
+document.body.insertBefore(renderer.domElement, document.getElementById('ui'));
+const scene = new THREE.Scene();
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+scene.environmentIntensity = 0.75;
+(function () {
+  const c = document.createElement('canvas'); c.width = 512; c.height = 288; const g = c.getContext('2d');
+  const lg = g.createLinearGradient(0, 0, 0, 288); lg.addColorStop(0, '#ffe3dc'); lg.addColorStop(0.55, '#ffb9ae'); lg.addColorStop(1, '#f2938c');
+  g.fillStyle = lg; g.fillRect(0, 0, 512, 288);
+  const rg = g.createRadialGradient(256, 120, 10, 256, 120, 320); rg.addColorStop(0, 'rgba(255,248,240,0.75)'); rg.addColorStop(1, 'rgba(255,240,235,0)');
+  g.fillStyle = rg; g.fillRect(0, 0, 512, 288);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; scene.background = t;
+})();
+scene.fog = new THREE.FogExp2(new THREE.Color('#ffc2b8'), 0);
+const camera = new THREE.PerspectiveCamera(35, W / H, 0.01, 100);
+scene.add(new THREE.HemisphereLight('#fff6ee', '#f4a7a7', 1.0));
+const key = new THREE.DirectionalLight('#fff3e0', 2.4); key.position.set(3, 6, 6); scene.add(key);
+const rim = new THREE.DirectionalLight('#ffc57a', 3.2); rim.position.set(-4, 3.5, -5); scene.add(rim);
+const rim2 = new THREE.DirectionalLight('#ffd08a', 1.8); rim2.position.set(5, 2, -4); scene.add(rim2);
+const fill = new THREE.DirectionalLight('#ffe6ea', 1.0); fill.position.set(0, -1, 6); scene.add(fill);
+
+function radialSprite() {
+  const c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d');
+  const rg = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+  rg.addColorStop(0, 'rgba(255,255,255,1)'); rg.addColorStop(0.25, 'rgba(255,255,255,0.55)'); rg.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = rg; g.fillRect(0, 0, 128, 128); return new THREE.CanvasTexture(c);
+}
+const glowTex = radialSprite();
+const spriteMat = (c, o = 0, fog = true) => new THREE.SpriteMaterial({ map: glowTex, color: c, blending: THREE.AdditiveBlending, transparent: true, depthWrite: false, opacity: o, fog });
+function noiseTex(size = 256, blur = 2) {
+  const c = document.createElement('canvas'); c.width = c.height = size; const g = c.getContext('2d'); const id = g.createImageData(size, size);
+  for (let i = 0; i < size * size; i++) { const v = 110 + rnd() * 145; id.data[i * 4] = id.data[i * 4 + 1] = id.data[i * 4 + 2] = v; id.data[i * 4 + 3] = 255; }
+  g.putImageData(id, 0, 0); if (blur) { g.filter = `blur(${blur}px)`; g.drawImage(c, 0, 0); }
+  const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t;
+}
+const GX0 = -8, GX1 = 8, GY0 = -6, GY1 = 1.2;
+function tissueTex() {
+  const w = 2048, h = 920; const c = document.createElement('canvas'); c.width = w; c.height = h;
+  const g = c.getContext('2d'); const id = g.createImageData(w, h);
+  const epi = [248, 160, 166], con = [232, 112, 124], deep = [214, 92, 108];
+  for (let py = 0; py < h; py++) for (let px = 0; px < w; px++) {
+    const x = GX0 + (px / w) * (GX1 - GX0), y = GY1 - (py / h) * (GY1 - GY0); const d = ys(x) - y;
+    let col;
+    if (d < 0.11) { const k = d / 0.11; col = epi.map((v, i) => v * (1 - k * 0.15) + con[i] * k * 0.15); }
+    else { const k = clamp((d - 0.11) / 1.2); col = con.map((v, i) => lerp(v, deep[i], k)); }
+    const f = Math.sin(x * 38 + Math.sin(y * 9) * 2.5 + d * 14) * 0.5 + 0.5; const fib = d > 0.13 ? Math.pow(f, 6) * 14 : 0;
+    const ridge = Math.abs(d - (0.11 + 0.025 * Math.sin(x * 22))) < 0.008 ? 18 : 0; const n = (rnd() - 0.5) * 8; const i4 = (py * w + px) * 4;
+    id.data[i4] = clamp(col[0] + fib + ridge + n, 0, 255); id.data[i4 + 1] = clamp(col[1] + fib * 0.7 + ridge * 0.8 + n, 0, 255);
+    id.data[i4 + 2] = clamp(col[2] + fib * 0.7 + ridge * 0.8 + n, 0, 255); id.data[i4 + 3] = 255;
+  }
+  g.putImageData(id, 0, 0);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
+  t.repeat.set(1 / (GX1 - GX0), 1 / (GY1 - GY0)); t.offset.set(-GX0 / (GX1 - GX0), -GY0 / (GY1 - GY0)); t.anisotropy = 8; return t;
+}
+function profileShape(topFn, botFn, x0, x1, n = 160) {
+  const s = new THREE.Shape();
+  for (let i = 0; i <= n; i++) { const x = lerp(x0, x1, i / n); i ? s.lineTo(x, topFn(x)) : s.moveTo(x, topFn(x)); }
+  for (let i = n; i >= 0; i--) { const x = lerp(x0, x1, i / n); s.lineTo(x, botFn(x)); }
+  return s;
+}
+function extrude(shape) { const g = new THREE.ExtrudeGeometry(shape, { depth: 1, bevelEnabled: false, steps: 1, curveSegments: 1 }); g.translate(0, 0, -1); return g; }
+const gumBump = noiseTex(256, 1.5); gumBump.repeat.set(3, 8);
+const gumCap = new THREE.MeshPhysicalMaterial({ map: tissueTex(), roughness: 0.55, clearcoat: 0.3, clearcoatRoughness: 0.4, sheen: 0.4, sheenColor: new THREE.Color('#ffd0d4') });
+const gumSide = new THREE.MeshPhysicalMaterial({ color: '#f2838b', roughness: 0.42, clearcoat: 0.9, clearcoatRoughness: 0.18, bumpMap: gumBump, bumpScale: 1.2, sheen: 0.6, sheenColor: new THREE.Color('#ffd6da') });
+const gum = new THREE.Mesh(extrude(profileShape(ys, () => -6, -8, 8)), [gumCap, gumSide]); scene.add(gum);
+const mucMat = new THREE.MeshPhysicalMaterial({ color: '#dff2ff', transparent: true, opacity: 0.26, roughness: 0.05, clearcoat: 1, clearcoatRoughness: 0.03, emissive: new THREE.Color('#bfe8ff'), emissiveIntensity: 0.05, depthWrite: false, side: THREE.DoubleSide });
+const mucus = new THREE.Mesh(extrude(profileShape(x => ys(x) + MUC, x => ys(x) + 0.002, -8, 8)), mucMat); mucus.renderOrder = 2; scene.add(mucus);
+
+// surface boundary highlight line
+const surfPts = []; for (let i = 0; i <= 120; i++) { const x = lerp(-2.2, 2.2, i / 120); surfPts.push(new THREE.Vector3(x, ys(x) + 0.002, 0.036)); }
+const surfMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(1.6, 0.9, 0.7), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
+const surfLine = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(surfPts), 240, 0.0045, 6, false), surfMat); scene.add(surfLine);
+
+// ---------- film ----------
+const NX = 140, NY = 12; const fx = [], fv = [], fz = [], idx = [];
+function addGrid(nu, nv, fn) {
+  const base = fx.length;
+  for (let j = 0; j <= nv; j++) for (let i = 0; i <= nu; i++) { const [x, r, z] = fn(i / nu, j / nv); fx.push(x); fv.push(r); fz.push(z); }
+  for (let j = 0; j < nv; j++) for (let i = 0; i < nu; i++) { const a = base + j * (nu + 1) + i, b = a + 1, c = a + nu + 1, d = c + 1; idx.push(a, b, d, a, d, c); }
+}
+const ux = u => lerp(-FW, FW, u);
+addGrid(NX, NY, (u, v) => [ux(u), v, 0]); addGrid(NX, NY, (u, v) => [ux(u), v, -1]);
+addGrid(NX, 6, (u, v) => [ux(u), 1, -v]); addGrid(NX, 6, (u, v) => [ux(u), 0, -v]);
+const filmGeo = new THREE.BufferGeometry(); const fPos = new Float32Array(fx.length * 3);
+filmGeo.setAttribute('position', new THREE.BufferAttribute(fPos, 3));
+filmGeo.setAttribute('rel', new THREE.BufferAttribute(new Float32Array(fv), 1)); filmGeo.setIndex(idx);
+const filmMat = new THREE.MeshPhysicalMaterial({ color: '#eab51a', roughness: 0.85, transparent: true, opacity: 1, side: THREE.DoubleSide, emissive: new THREE.Color('#ffb21a'), emissiveIntensity: 0, sheen: 0.3, sheenColor: new THREE.Color('#fff2b0') });
+const filmU = { uWave: { value: 0 }, uWaveP: { value: -1 }, uWave2P: { value: -1 }, uFront: { value: -1 }, uFrontAmt: { value: 0 } };
+filmMat.onBeforeCompile = sh => {
+  Object.assign(sh.uniforms, filmU);
+  sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nattribute float rel; varying float vRel;').replace('#include <begin_vertex>', '#include <begin_vertex>\nvRel = rel;');
+  sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nvarying float vRel; uniform float uWave, uWaveP, uWave2P, uFront, uFrontAmt;')
+    .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
+      float w1 = exp(-pow((vRel - uWaveP) / 0.13, 2.0));
+      float w2 = exp(-pow((vRel - uWave2P) / 0.10, 2.0)) * 0.7;
+      totalEmissiveRadiance += vec3(1.0, 0.86, 0.45) * uWave * (w1 + w2) * 2.2;
+      float fr = exp(-pow((vRel - uFront) / 0.045, 2.0));
+      totalEmissiveRadiance += vec3(1.0, 0.75, 0.55) * uFrontAmt * fr * 2.6;
+      totalEmissiveRadiance += vec3(1.0, 0.9, 0.7) * uFrontAmt * step(vRel, uFront) * 0.25;`);
+};
+const film = new THREE.Mesh(filmGeo, filmMat); film.renderOrder = 3; scene.add(film);
+const FLAT_B = ys(0) + MUC + 0.018;
+const sealAmt = t => t < T.seal0 ? 0 : t > T.seal1 ? 1 : eic((t - T.seal0) / (T.seal1 - T.seal0));
+const bounce = t => t > T.seal1 ? -0.006 * Math.exp(-(t - T.seal1) * 9) * Math.sin((t - T.seal1) * 38) : 0;
+const swell = t => eio(clamp((t - T.swell0) / (T.swell1 - T.swell0)));
+const edgeF = x => Math.pow(Math.max(0, 1 - Math.pow(Math.abs(x) / FW, 10)), 0.28);
+const filmBottom = (x, t) => lerp(FLAT_B, ys(x) + MUC - 0.002, sealAmt(t)) + bounce(t);
+function filmThick(x, t) {
+  const sw = swell(t);
+  const breathe = (t > T.swell0 && t < T.seal0) ? 0.006 * Math.sin((t - T.swell0) * Math.PI * 2 * 1.2) * sw : 0;
+  return (0.12 + 0.1 * sw + breathe - 0.012 * sealAmt(t) + 0.018 * sw * (1 - (x / FW) ** 2)) * edgeF(x);
+}
+const toWorldY = (x, u, t) => filmBottom(x, t) + u * filmThick(x, t);
+function updateFilm(t) {
+  for (let i = 0; i < fx.length; i++) { const x = fx[i]; fPos[i * 3] = x; fPos[i * 3 + 1] = filmBottom(x, t) + fv[i] * filmThick(x, t); fPos[i * 3 + 2] = fz[i]; }
+  filmGeo.attributes.position.needsUpdate = true; filmGeo.computeVertexNormals();
+}
+
+// ---------- HPMC chains ----------
+const chainMat = new THREE.MeshStandardMaterial({ color: '#fff7e6', emissive: new THREE.Color('#ffe7b0'), emissiveIntensity: 0.55, roughness: 0.3, transparent: true, opacity: 1 });
+const chains = [];
+for (let i = 0; i < 38; i++) {
+  const m = new THREE.Mesh(new THREE.BufferGeometry(), chainMat); m.frustumCulled = false; m.renderOrder = 4; scene.add(m);
+  chains.push({ m, cx: R(-1.45, 1.45), cu: R(0.18, 0.82), L: R(0.28, 0.5), ph: R(0, 6.28), ph2: R(0, 6.28), ph3: R(0, 6.28), d: R(0, 0.35) });
+}
+function buildChain(c, t) {
+  const h = clamp(swell(t) * 1.35 - c.d);
+  const he = eio(h);
+  const pts = [];
+  for (let k = 0; k <= 36; k++) {
+    const s = k / 36, a = k * 1.05 + c.ph;
+    const xd = c.cx + 0.016 * Math.cos(a) + (s - 0.5) * 0.035, ud = c.cu + 0.1 * Math.sin(a);
+    const xe = c.cx + (s - 0.5) * c.L + 0.045 * Math.sin(k * 0.45 + c.ph), ue = clamp(c.cu + 0.3 * Math.sin(k * 0.32 + c.ph2), 0.08, 0.92);
+    const x = clamp(lerp(xd, xe, he), -FW + 0.06, FW - 0.06), u = lerp(ud, ue, he);
+    pts.push(new THREE.Vector3(x, toWorldY(x, u, t), 0.007 + 0.014 * (0.5 + 0.5 * Math.sin(k * 0.7 + c.ph3))));
+  }
+  c.m.geometry.dispose();
+  c.m.geometry = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 72, lerp(0.0062, 0.0048, he), 6, false);
+}
+
+// ---------- water molecules ----------
+const NWAT = 260;
+const watMat = new THREE.MeshPhysicalMaterial({ color: '#5bbcff', roughness: 0.1, clearcoat: 1, emissive: new THREE.Color('#3a9cff'), emissiveIntensity: 0.6 });
+const sphereGeo = new THREE.SphereGeometry(1, 20, 14);
+const wat = new THREE.InstancedMesh(sphereGeo, watMat, NWAT); wat.frustumCulled = false; scene.add(wat);
+const waters = []; for (let i = 0; i < NWAT; i++) {
+  const side = rnd(); const tx = R(-1.5, 1.5);
+  waters.push({ tx, tu: R(0.05, 0.95), z: R(0.01, 0.034), t0: R(T.swell0 - 0.2, T.swell1 - 0.3), dur: R(0.45, 0.8), sx: side < 0.2 ? -FW - R(0.1, 0.5) : side < 0.4 ? FW + R(0.1, 0.5) : tx + R(-0.15, 0.15), sy: side < 0.4 ? R(0.85, 1.05) : FLAT_B - R(0.02, 0.06), ph: R(0, 6.28), r: R(0.0045, 0.0065) });
+}
+
+// ---------- saliva droplets ----------
+const dropMat = new THREE.MeshPhysicalMaterial({ color: '#46aefc', roughness: 0.02, clearcoat: 1, clearcoatRoughness: 0, transparent: true, opacity: 0.82, emissive: new THREE.Color('#1d74e0'), emissiveIntensity: 0.35, envMapIntensity: 2.2, ior: 1.33 });
+const drops = [];
+for (let i = 0; i < 26; i++) {
+  const side = i % 3; const tx = side === 0 ? R(-1.6, -0.3) : side === 1 ? R(0.3, 1.6) : R(-1.3, 1.3);
+  const start = side === 0 ? [R(-3.4, -2.3), R(0.55, 1.25), R(0.08, 0.35)] : side === 1 ? [R(2.3, 3.4), R(0.55, 1.25), R(0.08, 0.35)] : [tx + R(-0.4, 0.4), R(0.25, 0.55), R(0.25, 0.4)];
+  const m = new THREE.Mesh(sphereGeo, dropMat); scene.add(m);
+  const halo = new THREE.Sprite(spriteMat('#8fd2ff')); scene.add(halo);
+  drops.push({ m, halo, tx, tz: R(0.03, 0.12), start, r: R(0.035, 0.07), t0: R(T.drop0, T.drop1 - 0.6), dur: R(0.55, 0.8), tu: rnd() });
+}
+
+// ---------- mucoadhesion strands ----------
+const strandMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.75, 1.0, 1.1), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, opacity: 0.9 });
+const strands = [];
+for (let i = 0; i < 70; i++) {
+  const m = new THREE.Mesh(new THREE.BufferGeometry(), strandMat); m.frustumCulled = false; scene.add(m);
+  strands.push({ m, x0: R(-1.5, 1.5), dir: rnd() < 0.5 ? -1 : 1, L: R(0.25, 0.6), k: R(3, 7), ph: R(0, 6.28), k2: R(2, 5), ph2: R(0, 6.28), d: R(0, 0.5), rad: R(0.0025, 0.0042) });
+}
+const TSEG = 56, RSEG = 5;
+function buildStrand(s, t) {
+  const pts = [];
+  for (let k = 0; k <= 24; k++) {
+    const u = k / 24; const x = clamp(s.x0 + s.dir * s.L * u, -FW + 0.05, FW - 0.05);
+    const weave = ys(x) + MUC * (0.5 + 0.42 * Math.sin(u * Math.PI * s.k + s.ph));
+    pts.push(new THREE.Vector3(x, lerp(filmBottom(s.x0, t) + 0.015, weave, sstep(0, 0.22, u)), 0.006 + 0.02 * (0.5 + 0.5 * Math.sin(u * Math.PI * s.k2 + s.ph2))));
+  }
+  s.m.geometry.dispose(); s.m.geometry = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), TSEG, s.rad, RSEG, false);
+}
+const pulseL = new THREE.Sprite(spriteMat('#fff4d6')), pulseR = new THREE.Sprite(spriteMat('#fff4d6')), pulseC = new THREE.Sprite(spriteMat('#fff4d6'));
+scene.add(pulseL, pulseR, pulseC);
+
+// ---------- active ingredients ----------
+const PCOL = ['#cfd3de', '#c9a3ff', '#ffb36e', '#8ed8ff', '#9ff2b6'];
+const pMats = PCOL.map(c => new THREE.MeshPhysicalMaterial({ color: c, roughness: 0.15, clearcoat: 1, clearcoatRoughness: 0.05, emissive: new THREE.Color(c), emissiveIntensity: 0.12 }));
+const PER = 14; const parts = [];
+for (let g = 0; g < 5; g++) for (let k = 0; k < PER; k++) parts.push({ g, x: R(-1.42, 1.42), u: R(0.15, 0.85), r: R(0.016, 0.024), z: R(0.012, 0.03), dx: R(-0.05, 0.05), wob: R(0, 6.28) });
+const pInst = PCOL.map((c, g) => { const m = new THREE.InstancedMesh(sphereGeo, pMats[g], PER); m.frustumCulled = false; scene.add(m); return m; });
+const TR = 7;
+const trail = new THREE.InstancedMesh(sphereGeo, new THREE.MeshBasicMaterial({ transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }), parts.length * TR); trail.frustumCulled = false;
+trail.instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(parts.length * TR * 3), 3); scene.add(trail);
+const pools = parts.map(p => { const s = new THREE.Sprite(spriteMat(PCOL[p.g])); scene.add(s); return s; });
+// progressive release: a front climbs the gel; ingredients leave only once the front reaches them
+const frontAt = t => Math.pow(clamp((t - T.rel0) / T.relDur), 0.85);
+const relTime = p => T.rel0 + T.relDur * Math.pow(p.u, 1 / 0.85);
+const hiStart = g => 7.05 + g * 0.82;
+function partState(p, t) {
+  const t0 = relTime(p); const k = clamp((t - t0) / T.drift); const e = eio(k);
+  const hi = win(t, hiStart(p.g), hiStart(p.g) + 0.95, 0.2);
+  const glow = Math.max(sstep(t0 - 0.15, t0 + 0.05, t), 0.6 * hi);
+  const scale = p.r * (1 + 0.3 * glow + 0.25 * hi);
+  const x = p.x + p.dx * e + 0.012 * Math.sin(p.wob + t * 3) * (1 - e);
+  const yIn = toWorldY(p.x, p.u, t);
+  const y = lerp(yIn, ys(x) + scale + 0.003, e); // rests ON the gum surface, never below
+  return { x, y, z: p.z, scale, k, hi };
+}
+
+// ---------- hero spheres ----------
+const heroFinal = [[-1.5, 1.5, 3.0], [-0.78, 1.22, 3.1], [0.0, 1.5, 3.05], [0.78, 1.22, 3.1], [1.5, 1.5, 3.0]];
+const heroes = PCOL.map((c, g) => {
+  const m = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 48), new THREE.MeshPhysicalMaterial({ color: c, roughness: 0.08, clearcoat: 1, clearcoatRoughness: 0.02, emissive: new THREE.Color(c), emissiveIntensity: 0.3, iridescence: 0.3, sheen: 0.4, sheenColor: new THREE.Color('#ffffff'), fog: false }));
+  m.visible = false; scene.add(m);
+  const halo = new THREE.Sprite(spriteMat(c, 0, false)); scene.add(halo);
+  const cand = parts.map((p, i) => [p, i]).filter(([p]) => p.g === g);
+  cand.sort((a, b) => Math.abs(a[0].x - heroFinal[g][0] * 0.6) - Math.abs(b[0].x - heroFinal[g][0] * 0.6));
+  return { m, halo, pi: cand[0][1], slot: g };
+});
+const bokeh = [];
+for (let i = 0; i < 46; i++) { const s = new THREE.Sprite(spriteMat(new THREE.Color().setHSL(R(0.97, 1.08) % 1, 0.8, R(0.82, 0.92)), R(0.12, 0.32), false)); scene.add(s); bokeh.push({ s, p: [R(-9, 9), R(-2, 6), R(-9, -3)], sc: R(0.2, 0.9), ph: R(0, 6.28) }); }
+
+// ---------- post ----------
+const composer = new EffectComposer(renderer); composer.setSize(W, H);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(W, H), 0.4, 0.5, 1.15); composer.addPass(bloom);
+composer.addPass(new OutputPass());
+const finalPass = new ShaderPass({
+  uniforms: { tDiffuse: { value: null }, uSweep: { value: -2 }, uSweepAmt: { value: 0 }, uFlare: { value: 0 }, uFlarePos: { value: new THREE.Vector2(0.95, 0.55) }, uAspect: { value: W / H } },
+  vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0); }',
+  fragmentShader: `uniform sampler2D tDiffuse; uniform float uSweep, uSweepAmt, uFlare, uAspect; uniform vec2 uFlarePos; varying vec2 vUv;
+    void main(){ vec4 c = texture2D(tDiffuse, vUv);
+      float d = (vUv.x + vUv.y * 0.42) - uSweep;
+      c.rgb += uSweepAmt * (exp(-d*d/0.0035) * vec3(1.0,0.96,0.86) + exp(-d*d/0.05) * vec3(1.0,0.85,0.7) * 0.35);
+      vec2 p = (vUv - uFlarePos) * vec2(uAspect, 1.0); float r = length(p);
+      vec3 fl = exp(-r*r/0.012) * vec3(1.0,0.96,0.9) * 1.3 + exp(-abs(p.y)*90.0) * exp(-abs(p.x)*1.2) * vec3(1.0,0.86,0.72) * 0.9 + exp(-abs(r-0.22)*40.0) * vec3(1.0,0.8,0.85) * 0.12 + vec3(1.0,0.95,0.92) * 0.06;
+      c.rgb += uFlare * fl;
+      float v = smoothstep(1.25, 0.35, length((vUv - 0.5) * vec2(uAspect, 1.0))); c.rgb *= mix(0.86, 1.0, v);
+      gl_FragColor = vec4(c.rgb, 1.0); }`
+});
+composer.addPass(finalPass);
+
+// ---------- camera ----------
+const keys = [
+  [0.0, [0.9, 7.6, 10.5], [0, 0.95, 0]],
+  [0.92, [1.95, 1.6, 1.85], [1.45, 1.02, 0.0]],
+  [1.5, [0.2, 1.2, 2.3], [-0.05, 0.93, 0]],
+  [4.55, [-0.4, 1.1, 1.12], [-0.4, 1.0, 0]],
+  [5.15, [0.95, 1.06, 0.95], [0.8, 0.975, 0]],
+  [6.35, [0.72, 1.03, 0.85], [0.64, 0.96, 0]],
+  [6.95, [0.62, 1.12, 1.85], [0.62, 0.93, 0]],
+  [11.85, [0.38, 1.1, 1.7], [0.42, 0.93, 0]],
+  [12.9, [0, 1.75, 7.3], [0, 1.2, 0]],
+  [15.0, [0, 1.68, 6.8], [0, 1.2, 0]],
+];
+const eases = [eic, eio, x => lerp(x, eio(x), 0.6), eio, x => lerp(x, eio(x), 0.5), eio, x => lerp(x, eio(x), 0.4), eio, x => lerp(x, eio(x), 0.5)];
+const v3 = a => new THREE.Vector3(...a);
+function camAt(t) {
+  let i = 0; while (i < keys.length - 2 && t > keys[i + 1][0]) i++;
+  const [ta, pa, qa] = keys[i], [tb, pb, qb] = keys[i + 1]; const u = eases[i](clamp((t - ta) / (tb - ta)));
+  return [v3(pa).lerp(v3(pb), u), v3(qa).lerp(v3(qb), u)];
+}
+
+// ---------- UI ----------
+const $ = id => document.getElementById(id);
+function show(el, a, dy = 18, extra = '') { el.style.opacity = a; el.style.transform = `${extra} translateY(${(1 - a) * dy}px)`; }
+const toScreen = v => { const p = v.clone().project(camera); return [(p.x * 0.5 + 0.5) * 1920, (-p.y * 0.5 + 0.5) * 1080]; };
+// graph geometry
+const GX = s => 44 + s * 420, GY = f => 196 - f * 168;
+const curveF = s => 1 - Math.pow(1 - s, 1.6); // cumulative release of a gradual profile (schematic)
+(function ticks() { let h = ''; ['1단계', '2단계', '3단계'].forEach((l, i) => { const s = (i + 1) / 3 - 0.02; h += `<line x1="${GX(s)}" y1="192" x2="${GX(s)}" y2="200" stroke="#c45a6e" stroke-width="3"/><text x="${GX(s)}" y="222" text-anchor="middle">${l}</text>`; }); $('stepTicks').innerHTML = h; })();
+function drawGraph(s) {
+  let d = '', a = `M${GX(0)},${GY(0)}`; const n = Math.max(1, Math.round(s * 80));
+  for (let i = 0; i <= n; i++) { const q = (i / 80); const pt = `${GX(q).toFixed(1)},${GY(curveF(q)).toFixed(1)}`; d += (i ? 'L' : 'M') + pt; a += 'L' + pt; }
+  a += `L${GX(n / 80)},${GY(0)}Z`;
+  $('curve').setAttribute('d', d); $('area').setAttribute('d', a);
+  $('mk').setAttribute('cx', GX(n / 80)); $('mk').setAttribute('cy', GY(curveF(n / 80)));
+}
+
+// ---------- frame ----------
+const dummy = new THREE.Object3D(); const tmpC = new THREE.Color();
+window.renderAt = function (t) {
+  const [cp, cq] = camAt(t);
+  const shake = t > T.seal1 ? 0.006 * Math.exp(-(t - T.seal1) * 8) : 0;
+  cp.x += shake * Math.sin(t * 90); cp.y += shake * Math.cos(t * 77);
+  camera.position.copy(cp); camera.lookAt(cq); camera.updateMatrixWorld();
+
+  const cutZ = t < T.cut0 ? 14 : t > T.cut1 ? 0 : lerp(14, 0, eio((t - T.cut0) / (T.cut1 - T.cut0)));
+  gum.position.z = mucus.position.z = cutZ; gum.scale.z = mucus.scale.z = cutZ + 6;
+  const ff = Math.min(0.6, cutZ); film.position.z = ff; film.scale.z = ff + 0.6;
+
+  const sw = swell(t);
+  filmMat.color.set('#eab51a').lerp(tmpC.set('#ffd650'), sw);
+  filmMat.roughness = lerp(0.88, 0.06, sw); filmMat.clearcoat = sw; filmMat.clearcoatRoughness = 0.04;
+  filmMat.opacity = lerp(1.0, 0.5, sw);
+  filmMat.emissiveIntensity = 0.02 + 0.45 * sw + (t > T.seal1 ? 0.3 * Math.exp(-(t - T.seal1) * 6) : 0);
+  filmMat.depthWrite = sw < 0.3;
+  const wv = clamp((t - T.swell0) / (T.swell1 - T.swell0));
+  filmU.uWave.value = sstep(T.swell0, T.swell0 + 0.3, t) * (1 - sstep(T.swell1 - 0.2, T.swell1 + 0.2, t));
+  filmU.uWaveP.value = lerp(-0.3, 1.3, (wv * 1.8) % 1); filmU.uWave2P.value = lerp(-0.3, 1.3, ((wv * 1.8) + 0.5) % 1);
+  filmU.uFront.value = frontAt(t); filmU.uFrontAmt.value = win(t, T.rel0 - 0.1, T.rel0 + T.relDur + 0.4, 0.3);
+  updateFilm(t);
+
+  const pulse = t > T.seal1 ? Math.exp(-(t - T.seal1) * 5) : 0;
+  mucMat.emissiveIntensity = 0.05 + 0.25 * sstep(T.str0, T.seal1, t) * (1 - 0.5 * sstep(6.4, 7.4, t)) + 0.6 * pulse;
+  mucMat.opacity = 0.26 + 0.12 * sstep(T.str0, T.seal1, t);
+  surfMat.opacity = 0.85 * win(t, 10.45, 12.1, 0.35);
+
+  // chains
+  chainMat.opacity = (1 - 0.5 * sstep(6.6, 7.4, t)) * (1 - sstep(11.9, 12.5, t)); chainMat.emissiveIntensity = 0.35 + 0.5 * sw;
+  for (const c of chains) { c.m.visible = t > 1.2 && t < 12.6; if (c.m.visible) buildChain(c, t); }
+
+  // water
+  for (let i = 0; i < NWAT; i++) {
+    const w = waters[i]; const k = clamp((t - w.t0) / w.dur); const e = eoc(k);
+    const ty = toWorldY(w.tx, w.tu, t);
+    const x = lerp(w.sx, w.tx, e) + 0.006 * Math.sin(t * 4 + w.ph) * k, y = lerp(w.sy, ty, e) + 0.004 * Math.cos(t * 5 + w.ph) * k;
+    const s = k > 0 ? w.r * (1 - sstep(11.9, 12.4, t)) : 0;
+    dummy.position.set(x, y, w.z); dummy.scale.setScalar(s); dummy.updateMatrix(); wat.setMatrixAt(i, dummy.matrix);
+  }
+  wat.instanceMatrix.needsUpdate = true;
+
+  // saliva
+  for (const d of drops) {
+    const k = clamp((t - d.t0) / d.dur); const tb = filmBottom(d.tx, t);
+    const target = [d.tx, tb + 0.01 + d.tu * 0.04, d.tz];
+    const mid = [(d.start[0] + target[0]) / 2, Math.max(d.start[1], target[1]) + 0.25, (d.start[2] + target[2]) / 2];
+    const e = eoc(k); const q = (a, b, c) => (1 - e) * (1 - e) * a + 2 * (1 - e) * e * b + e * e * c;
+    const absorb = sstep(0.82, 1.0, k); const sc = d.r * (1 - absorb) * (k > 0 ? 1 : 0) * (1 + 0.08 * Math.sin(t * 14 + d.t0 * 9));
+    d.m.visible = sc > 0.0005;
+    d.m.position.set(q(d.start[0], mid[0], target[0]), q(d.start[1], mid[1], target[1]), q(d.start[2], mid[2], target[2]));
+    d.m.scale.set(sc * (1 + 0.25 * absorb), sc * (1 - 0.3 * absorb), sc);
+    d.halo.position.set(target[0], target[1] - 0.005, target[2] + 0.02);
+    const hk = sstep(0.8, 0.92, k) * (1 - sstep(0.95, 1.6, (t - d.t0) / d.dur));
+    d.halo.material.opacity = 0.75 * hk; d.halo.scale.setScalar(0.08 + 0.16 * hk);
+  }
+
+  // strands
+  for (const s of strands) {
+    const g = clamp((t - (T.str0 + s.d)) / 0.6); s.m.visible = g > 0 && t < 12.6;
+    if (g > 0 && (t < 6.4 || !s.built)) { buildStrand(s, Math.min(t, 6.4)); s.built = t >= 6.4; }
+    if (g > 0) s.m.geometry.setDrawRange(0, Math.floor(eoc(g) * TSEG) * RSEG * 6);
+  }
+  strandMat.opacity = 0.95 * (1 - 0.55 * sstep(6.4, 7.4, t)) * (1 - sstep(11.9, 12.4, t));
+
+  const pk = clamp((t - T.seal1) / 0.9), pxp = eoc(pk) * 1.7, po = t > T.seal1 ? (1 - pk) : 0;
+  pulseL.position.set(-pxp, ys(-pxp) + MUC * 0.6, 0.03); pulseR.position.set(pxp, ys(pxp) + MUC * 0.6, 0.03);
+  pulseL.material.opacity = pulseR.material.opacity = 0.9 * po; pulseL.scale.set(0.35, 0.12, 1); pulseR.scale.set(0.35, 0.12, 1);
+  pulseC.position.set(0.66, ys(0.66) + MUC, 0.04); pulseC.material.opacity = 0.8 * (t > T.seal1 ? Math.exp(-(t - T.seal1) * 7) : 0); pulseC.scale.set(0.5, 0.16, 1);
+
+  // ingredients
+  const cnt = [0, 0, 0, 0, 0];
+  parts.forEach((p, i) => {
+    const s = partState(p, t); let sc = s.scale;
+    const hero = heroes.find(h => h.pi === i);
+    if (hero && t > T.hero + hero.slot * 0.07) sc = 0;
+    dummy.position.set(s.x, s.y, s.z); dummy.scale.setScalar(sc); dummy.updateMatrix(); pInst[p.g].setMatrixAt(cnt[p.g]++, dummy.matrix);
+    for (let j = 0; j < TR; j++) {
+      const sj = partState(p, t - (j + 1) * 0.03);
+      const moving = sj.k > 0 && sj.k < 1 ? 1 : (s.k > 0 && s.k < 1 ? 0.6 : 0);
+      const f = (1 - j / TR) * moving * (sc > 0 ? 1 : 0);
+      dummy.position.set(sj.x, sj.y, sj.z + 0.001); dummy.scale.setScalar(sj.scale * (1.25 - j * 0.09)); dummy.updateMatrix();
+      trail.setMatrixAt(i * TR + j, dummy.matrix); trail.setColorAt(i * TR + j, tmpC.set(PCOL[p.g]).multiplyScalar(0.55 * f));
+    }
+    const land = sstep(0.85, 1.0, s.k) * (1 - sstep(12.0, 12.6, t));
+    pools[i].position.set(s.x, ys(s.x) + 0.006, s.z + 0.002); pools[i].scale.set(0.11 + 0.05 * land + 0.06 * s.hi, 0.03, 1);
+    pools[i].material.opacity = (0.6 + 0.4 * s.hi) * land;
+  });
+  pInst.forEach(m => { m.instanceMatrix.needsUpdate = true; });
+  trail.instanceMatrix.needsUpdate = true; trail.instanceColor.needsUpdate = true;
+  pMats.forEach((m, g) => { m.emissiveIntensity = 0.12 + 0.5 * sstep(T.rel0, T.rel0 + 0.5, t) + 1.6 * win(t, hiStart(g), hiStart(g) + 0.95, 0.2); });
+
+  // heroes
+  heroes.forEach((h, g) => {
+    const tb = T.hero + h.slot * 0.07; const k = clamp((t - tb) / 0.65); h.m.visible = t > tb;
+    const p0 = partState(parts[h.pi], tb);
+    const pos = v3([p0.x, p0.y, p0.z]).lerp(v3(heroFinal[h.slot]), eoc(k)); pos.y += 0.05 * Math.sin(t * 2.2 + g) * k;
+    h.m.position.copy(pos); const rr = lerp(p0.scale, 0.33, eob(clamp((t - tb) / 0.5))); h.m.scale.setScalar(rr); h.m.rotation.y = t * 0.6;
+    h.halo.position.copy(pos).add(new THREE.Vector3(0, 0, -0.05));
+    const flash = t > tb ? Math.exp(-(t - tb) * 6) : 0; h.halo.material.opacity = t > tb ? 0.32 + 0.65 * flash : 0; h.halo.scale.setScalar(rr * (3.0 + 4 * flash));
+    h.screen = toScreen(pos); h.rs = toScreen(pos.clone().add(new THREE.Vector3(rr, 0, 0)))[0] - h.screen[0];
+  });
+  scene.fog.density = 0.16 * sstep(T.fog0, T.fog1, t);
+  bokeh.forEach(b => { b.s.position.set(b.p[0] + 0.3 * Math.sin(t * 0.4 + b.ph), b.p[1] + 0.2 * Math.cos(t * 0.5 + b.ph), b.p[2]); b.s.scale.setScalar(b.sc); });
+
+  finalPass.uniforms.uSweep.value = lerp(-0.6, 1.8, clamp((t - T.sweep0) / 0.45));
+  finalPass.uniforms.uSweepAmt.value = sstep(T.sweep0 - 0.05, T.sweep0 + 0.05, t) * (1 - sstep(T.sweep0 + 0.35, T.sweep0 + 0.45, t)) * 1.3;
+  finalPass.uniforms.uFlare.value = 0.38 * sstep(T.flare0, T.flare0 + 0.3, t) * (1 - 0.4 * sstep(14.7, 15, t));
+  bloom.strength = 0.38 + 0.18 * sstep(6.8, 7.3, t) + 0.25 * sstep(12, 12.8, t);
+
+  // ---- UI ----
+  show($('st1'), win(t, 1.65, 4.55)); show($('hp'), win(t, 2.2, 4.55));
+  show($('st2'), win(t, 4.7, 6.55)); show($('ad'), win(t, 4.95, 6.55));
+  show($('st3'), win(t, 6.8, 11.85));
+  for (let g = 0; g < 5; g++) {
+    const a = win(t, hiStart(g) - 0.1, 11.85); const el = $('r' + g);
+    const hi = win(t, hiStart(g), hiStart(g) + 0.95, 0.2);
+    el.style.opacity = a; el.style.transform = `translateX(${(1 - a) * 40}px) scale(${1 + 0.04 * hi})`;
+    el.style.boxShadow = `0 6px 24px rgba(190,70,80,.15), 0 0 0 ${3 * hi}px ${PCOL[g]}`;
+  }
+  show($('gr'), win(t, 6.95, 11.85)); drawGraph(frontAt(t));
+  const sfA = win(t, 10.5, 11.85);
+  { const [sx, sy] = toScreen(new THREE.Vector3(-0.15, ys(-0.15), 0.03)); const el = $('sf'); el.style.left = (sx - 330) + 'px'; el.style.top = (sy + 34) + 'px'; show(el, sfA, 14); }
+  const axA = win(t, 12.75, 15.5); const labA = win(t, 12.55, 15.5);
+  heroes.forEach((h, g) => { const el = $('l' + g); const [x, y] = h.screen; el.style.left = x + 'px'; el.style.top = (y + h.rs + 44) + 'px'; el.style.opacity = labA; });
+  const hs = heroes.map(h => h.screen);
+  [[0, 1], [2], [3, 4]].forEach((grp, i) => {
+    const el = $('ax' + i); const x = grp.reduce((s, g) => s + hs[g][0], 0) / grp.length;
+    el.style.left = x + 'px'; el.style.top = '120px'; el.style.opacity = axA; el.style.transform = `translateX(-50%) translateY(${(1 - axA) * -16}px)`;
+  });
+  { const a = win(t, 13.1, 15.5); const el = $('tg'); el.style.opacity = a; el.style.transform = `translateX(-50%) translateY(${(1 - a) * 18}px)`; }
+
+  composer.render();
+  return true;
+};
+document.fonts.ready.then(async () => {
+  await Promise.all(['500', '700', '900'].map(w => document.fonts.load(`${w} 20px KR`, '가나')).concat(['700', '900'].map(w => document.fonts.load(`${w} 20px KRL`, 'Ab'))));
+  window.ready = true;
+});
+</script></body></html>

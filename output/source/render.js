@@ -4,7 +4,7 @@ const { chromium } = require('playwright');
 const root = __dirname;
 const [outDir, w, h, fps, list] = [process.argv[2], +process.argv[3], +process.argv[4], +process.argv[5], process.argv[6]];
 fs.mkdirSync(outDir, { recursive: true });
-const types = { '.html': 'text/html', '.js': 'text/javascript' };
+const types = { '.html': 'text/html', '.js': 'text/javascript', '.woff2': 'font/woff2' };
 const srv = http.createServer((q, r) => {
   const f = path.join(root, decodeURIComponent(q.url.split('?')[0]));
   if (!f.startsWith(root) || !fs.existsSync(f)) { r.writeHead(404); return r.end(); }
@@ -15,9 +15,9 @@ const srv = http.createServer((q, r) => {
   const page = await browser.newPage({ viewport: { width: w, height: h }, deviceScaleFactor: 1 });
   page.on('console', m => console.log('[page]', m.text()));
   page.on('pageerror', e => console.log('[err]', e.message));
-  await page.goto(`http://localhost:${port}/index.html?w=${w}&h=${h}&dbg=${process.env.DBG||""}`);
+  await page.goto(`http://localhost:${port}/${process.env.PAGE||'index.html'}?w=${w}&h=${h}&dbg=${process.env.DBG||""}`);
   await page.waitForFunction('window.ready === true', null, { timeout: 120000 });
-  const times = list ? list.split(',').map(Number) : Array.from({ length: Math.round(7 * fps) }, (_, i) => i / fps);
+  const times = list ? list.split(',').map(Number) : Array.from({ length: Math.round((+process.env.DUR||7) * fps) }, (_, i) => i / fps);
   const t0 = Date.now();
   for (let i = 0; i < times.length; i++) {
     await page.evaluate(t => window.renderAt(t), times[i]);
