@@ -1,0 +1,582 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:KRL;font-weight:500;src:url(node_modules/@fontsource/noto-sans-kr/files/noto-sans-kr-latin-500-normal.woff2)}
+@font-face{font-family:KRL;font-weight:700;src:url(node_modules/@fontsource/noto-sans-kr/files/noto-sans-kr-latin-700-normal.woff2)}
+@font-face{font-family:KRL;font-weight:900;src:url(node_modules/@fontsource/noto-sans-kr/files/noto-sans-kr-latin-900-normal.woff2)}
+@font-face{font-family:KR;font-weight:500;src:url(node_modules/@fontsource/noto-sans-kr/files/noto-sans-kr-korean-500-normal.woff2)}
+@font-face{font-family:KR;font-weight:700;src:url(node_modules/@fontsource/noto-sans-kr/files/noto-sans-kr-korean-700-normal.woff2)}
+@font-face{font-family:KR;font-weight:900;src:url(node_modules/@fontsource/noto-sans-kr/files/noto-sans-kr-korean-900-normal.woff2)}
+html,body{margin:0;background:#000;overflow:hidden}
+canvas{display:block;position:absolute;left:0;top:0}
+#ui{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;font-family:KRL,KR,sans-serif;color:#4a2a33;pointer-events:none}
+#ui *{box-sizing:border-box}
+.a{position:absolute;opacity:0;will-change:transform,opacity}
+.chip{display:inline-flex;align-items:center;gap:18px;padding:16px 40px 16px 18px;border-radius:999px;background:#fff;box-shadow:0 10px 34px rgba(200,40,80,.28);font-weight:900;font-size:48px;letter-spacing:-1px;color:#3a0f22}
+.chip .n{width:66px;height:66px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:38px;background:linear-gradient(135deg,#ff6f61,#e8336f)}
+.sub{display:inline-block;font-weight:900;font-size:38px;color:#fff;margin:14px 0 0 10px;padding:8px 22px;border-radius:14px;background:rgba(80,14,40,.72)}
+.card{padding:26px 34px;border-radius:28px;background:rgba(255,255,255,.96);box-shadow:0 12px 40px rgba(200,40,80,.25);border-left:10px solid #e8336f}
+.card h3{margin:0;font-size:46px;font-weight:900;color:#3a0f22;letter-spacing:-1px}
+.card h3 small{font-size:24px;font-weight:700;color:#8a4a5c;margin-left:10px}
+.card p{margin:0;font-size:31px;font-weight:700;color:#3a0f22;line-height:1.45}
+.legend{display:flex;gap:32px;margin-top:14px;font-size:27px;font-weight:900;color:#5a1a33}
+.legend i{display:inline-block;vertical-align:middle;margin-right:8px}
+.row{display:flex;align-items:center;gap:22px;width:420px;padding:12px 22px;border-radius:24px;background:rgba(255,255,255,.96);box-shadow:0 8px 28px rgba(200,40,80,.22)}
+.dot{width:70px;height:70px;border-radius:50%;flex:none;box-shadow:inset -6px -8px 14px rgba(0,0,0,.12),inset 6px 6px 10px rgba(255,255,255,.8),0 0 18px var(--c)}
+.row b{display:block;font-size:44px;font-weight:900;color:#14213d;letter-spacing:-1px;line-height:1.15}
+.row b small{font-size:21px;font-weight:700;color:#8a4a5c;margin-left:8px;letter-spacing:0}
+.row span{display:block;font-size:32px;font-weight:900;color:#c2185b;margin-top:2px;letter-spacing:-.5px}
+.row .ax{margin-left:auto;font-size:22px;font-weight:900;color:#fff;padding:8px 16px;border-radius:999px;white-space:nowrap}
+.graph{width:640px;padding:18px 24px 12px;border-radius:26px;background:rgba(255,255,255,.96);box-shadow:0 10px 34px rgba(200,40,80,.22)}
+.graph .t{font-size:32px;font-weight:900;color:#3a0f22;letter-spacing:-.5px}
+.graph .t small{font-size:21px;color:#8a4a5c;font-weight:700;margin-left:8px}
+.surf{font-size:42px;font-weight:900;color:#fff;padding:14px 32px;border-radius:999px;background:linear-gradient(90deg,#e8336f,#ff7a3d);box-shadow:0 6px 22px rgba(230,80,90,.35);white-space:nowrap}
+.lab{transform:translate(-50%,-50%);text-align:center;font-weight:900;font-size:50px;color:#14213d;text-shadow:0 2px 0 #fff,0 0 14px #fff,0 0 28px rgba(255,255,255,.9);white-space:nowrap;letter-spacing:-.5px}
+.lab small{display:block;font-size:24px;font-weight:900;color:#8a3a55;text-shadow:0 1px 0 rgba(255,255,255,.9)}
+.axis{transform:translateX(-50%);display:flex;align-items:center;gap:12px;padding:14px 34px;border-radius:999px;background:#fff;box-shadow:0 8px 28px rgba(200,40,80,.25);font-weight:900;font-size:42px;color:#3a0f22;white-space:nowrap}
+.axis i{width:22px;height:22px;border-radius:50%;display:inline-block}
+.tag{left:50%;transform:translateX(-50%);padding:18px 56px;border-radius:999px;background:#c2185b;box-shadow:0 10px 34px rgba(200,40,80,.35);color:#fff;font-weight:900;font-size:42px;letter-spacing:-.3px;white-space:nowrap}
+.tag em{font-style:normal;color:#ffe066}
+.note{font-size:16px;font-weight:700;color:rgba(90,40,50,.55)}
+.st{left:56px;top:50px;display:flex;flex-direction:column;align-items:flex-start;gap:14px}
+.ln{background:#fff;color:#14213d;border-radius:22px;padding:12px 32px;font-weight:900;box-shadow:0 10px 30px rgba(200,40,80,.22);letter-spacing:-1px;white-space:nowrap}
+.l1{font-size:56px}.l2{font-size:40px;font-weight:700}
+.hl{background:#ee4d7c;color:#fff;border-radius:999px;padding:16px 38px;font-weight:900;font-size:44px;box-shadow:0 10px 30px rgba(220,50,100,.35);white-space:nowrap}
+</style>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+</head><body>
+<div id="ui">
+  <div class="a st" id="st1"><div class="ln l1">① HPMC 수화</div><div class="ln l2">수분 흡수 → 겔층</div></div>
+  <div class="a st" id="st2"><div class="ln l1">② 점막 부착</div><div class="ln l2">점액층과 결합</div></div>
+  <div class="a st" id="st3"><div class="ln l1">③ 순차 방출</div></div>
+  <div class="a row" id="r0" style="left:1440px;top:210px"><div class="dot" style="--c:#c6ccdc;background:#eef0f6"></div><b>산화아연</b></div>
+  <div class="a row" id="r1" style="left:1440px;top:330px"><div class="dot" style="--c:#b27cff;background:#b27cff"></div><b>L-아르기닌</b></div>
+  <div class="a row" id="r2" style="left:1440px;top:450px"><div class="dot" style="--c:#ff9a3c;background:#ff9a3c"></div><b>비타민 C</b></div>
+  <div class="a row" id="r3" style="left:1440px;top:570px"><div class="dot" style="--c:#45c2ff;background:#45c2ff"></div><b>히알루론산</b></div>
+  <div class="a row" id="r4" style="left:1440px;top:690px"><div class="dot" style="--c:#4fe08a;background:#4fe08a"></div><b>베타인</b></div>
+  <div class="a hl" id="sf" style="left:56px;top:560px">표면 작용 · 조직 침투 ×</div>
+  <div class="a lab" id="l0">산화아연</div>
+  <div class="a lab" id="l1">L-아르기닌</div>
+  <div class="a lab" id="l2">비타민 C</div>
+  <div class="a lab" id="l3">히알루론산</div>
+  <div class="a lab" id="l4">베타인</div>
+  <div class="a tag" id="tg" style="top:930px">HPMC 겔층 · 순차 방출 · 표면 작용</div>
+</div>
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+
+const params = new URLSearchParams(location.search);
+const W = +(params.get('w') || 1920), H = +(params.get('h') || 1080);
+document.getElementById('ui').style.transform = `scale(${W / 1920})`;
+
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const lerp = (a, b, t) => a + (b - a) * t;
+const sstep = (a, b, x) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
+const eio = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+const eoc = t => 1 - Math.pow(1 - t, 3);
+const eic = t => t * t * t;
+const eob = t => { const c1 = 1.9, c3 = c1 + 1; return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2); };
+let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+const R = (a, b) => a + (b - a) * rnd();
+const win = (t, a, b, f = 0.3) => sstep(a, a + f, t) * (1 - sstep(b - f, b, t));
+
+const ys = x => 1.0 - 0.14 * x * x;
+const MUC = 0.06, FW = 1.6;
+
+// ---------- timeline ----------
+const T = {
+  cut0: 0.8, cut1: 1.38, sweep0: 0.95,
+  drop0: 1.5, drop1: 3.1, swell0: 1.9, swell1: 4.3,
+  str0: 4.8, seal0: 5.15, seal1: 6.0,
+  rel0: 6.85, relDur: 4.4, drift: 0.8,
+  hero: 11.9, fog0: 12.0, fog1: 12.9, flare0: 14.35, END: 15,
+};
+
+// ---------- renderer ----------
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1); renderer.setSize(W, H);
+renderer.toneMapping = THREE.NeutralToneMapping; renderer.toneMappingExposure = 0.88;
+document.body.insertBefore(renderer.domElement, document.getElementById('ui'));
+const scene = new THREE.Scene();
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+scene.environmentIntensity = 0.6;
+(function () {
+  const c = document.createElement('canvas'); c.width = 512; c.height = 288; const g = c.getContext('2d');
+  const lg = g.createLinearGradient(0, 0, 0, 288); lg.addColorStop(0, '#ffd2c8'); lg.addColorStop(0.55, '#ff9f98'); lg.addColorStop(1, '#ee6f82');
+  g.fillStyle = lg; g.fillRect(0, 0, 512, 288);
+  const rg = g.createRadialGradient(256, 120, 10, 256, 120, 320); rg.addColorStop(0, 'rgba(255,240,230,0.55)'); rg.addColorStop(1, 'rgba(255,240,235,0)');
+  g.fillStyle = rg; g.fillRect(0, 0, 512, 288);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; scene.background = t;
+})();
+scene.fog = new THREE.FogExp2(new THREE.Color('#ffaaa0'), 0);
+const camera = new THREE.PerspectiveCamera(35, W / H, 0.01, 100);
+scene.add(new THREE.HemisphereLight('#fff4ec', '#f08a9a', 0.8));
+const key = new THREE.DirectionalLight('#fff3e0', 2.4); key.position.set(3, 6, 6); scene.add(key);
+const rim = new THREE.DirectionalLight('#ffc57a', 3.2); rim.position.set(-4, 3.5, -5); scene.add(rim);
+const rim2 = new THREE.DirectionalLight('#ffd08a', 1.8); rim2.position.set(5, 2, -4); scene.add(rim2);
+const fill = new THREE.DirectionalLight('#ffe6ea', 1.0); fill.position.set(0, -1, 6); scene.add(fill);
+
+function radialSprite() {
+  const c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d');
+  const rg = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+  rg.addColorStop(0, 'rgba(255,255,255,1)'); rg.addColorStop(0.25, 'rgba(255,255,255,0.55)'); rg.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = rg; g.fillRect(0, 0, 128, 128); return new THREE.CanvasTexture(c);
+}
+const glowTex = radialSprite();
+const spriteMat = (c, o = 0, fog = true) => new THREE.SpriteMaterial({ map: glowTex, color: c, blending: THREE.AdditiveBlending, transparent: true, depthWrite: false, opacity: o, fog });
+function noiseTex(size = 256, blur = 2) {
+  const c = document.createElement('canvas'); c.width = c.height = size; const g = c.getContext('2d'); const id = g.createImageData(size, size);
+  for (let i = 0; i < size * size; i++) { const v = 110 + rnd() * 145; id.data[i * 4] = id.data[i * 4 + 1] = id.data[i * 4 + 2] = v; id.data[i * 4 + 3] = 255; }
+  g.putImageData(id, 0, 0); if (blur) { g.filter = `blur(${blur}px)`; g.drawImage(c, 0, 0); }
+  const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t;
+}
+const GX0 = -8, GX1 = 8, GY0 = -6, GY1 = 1.2;
+function tissueTex() {
+  const w = 2048, h = 920; const c = document.createElement('canvas'); c.width = w; c.height = h;
+  const g = c.getContext('2d'); const id = g.createImageData(w, h);
+  const epi = [255, 150, 160], con = [236, 86, 110], deep = [205, 58, 92];
+  for (let py = 0; py < h; py++) for (let px = 0; px < w; px++) {
+    const x = GX0 + (px / w) * (GX1 - GX0), y = GY1 - (py / h) * (GY1 - GY0); const d = ys(x) - y;
+    let col;
+    if (d < 0.11) { const k = d / 0.11; col = epi.map((v, i) => v * (1 - k * 0.15) + con[i] * k * 0.15); }
+    else { const k = clamp((d - 0.11) / 1.2); col = con.map((v, i) => lerp(v, deep[i], k)); }
+    const f = Math.sin(x * 38 + Math.sin(y * 9) * 2.5 + d * 14) * 0.5 + 0.5; const fib = d > 0.13 ? Math.pow(f, 6) * 14 : 0;
+    const ridge = Math.abs(d - (0.11 + 0.025 * Math.sin(x * 22))) < 0.008 ? 18 : 0; const n = (rnd() - 0.5) * 8; const i4 = (py * w + px) * 4;
+    id.data[i4] = clamp(col[0] + fib + ridge + n, 0, 255); id.data[i4 + 1] = clamp(col[1] + fib * 0.7 + ridge * 0.8 + n, 0, 255);
+    id.data[i4 + 2] = clamp(col[2] + fib * 0.7 + ridge * 0.8 + n, 0, 255); id.data[i4 + 3] = 255;
+  }
+  g.putImageData(id, 0, 0);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
+  t.repeat.set(1 / (GX1 - GX0), 1 / (GY1 - GY0)); t.offset.set(-GX0 / (GX1 - GX0), -GY0 / (GY1 - GY0)); t.anisotropy = 8; return t;
+}
+function profileShape(topFn, botFn, x0, x1, n = 160) {
+  const s = new THREE.Shape();
+  for (let i = 0; i <= n; i++) { const x = lerp(x0, x1, i / n); i ? s.lineTo(x, topFn(x)) : s.moveTo(x, topFn(x)); }
+  for (let i = n; i >= 0; i--) { const x = lerp(x0, x1, i / n); s.lineTo(x, botFn(x)); }
+  return s;
+}
+function extrude(shape) { const g = new THREE.ExtrudeGeometry(shape, { depth: 1, bevelEnabled: false, steps: 1, curveSegments: 1 }); g.translate(0, 0, -1); return g; }
+const gumBump = noiseTex(256, 1.5); gumBump.repeat.set(3, 8);
+const gumCap = new THREE.MeshPhysicalMaterial({ map: tissueTex(), roughness: 0.55, clearcoat: 0.3, clearcoatRoughness: 0.4, sheen: 0.4, sheenColor: new THREE.Color('#ffd0d4') });
+const gumSide = new THREE.MeshPhysicalMaterial({ color: '#f0657a', roughness: 0.42, clearcoat: 0.9, clearcoatRoughness: 0.18, bumpMap: gumBump, bumpScale: 1.2, sheen: 0.6, sheenColor: new THREE.Color('#ffd6da') });
+const gum = new THREE.Mesh(extrude(profileShape(ys, () => -6, -8, 8)), [gumCap, gumSide]); scene.add(gum);
+const mucMat = new THREE.MeshPhysicalMaterial({ color: '#dff2ff', transparent: true, opacity: 0.26, roughness: 0.05, clearcoat: 1, clearcoatRoughness: 0.03, emissive: new THREE.Color('#bfe8ff'), emissiveIntensity: 0.05, depthWrite: false, side: THREE.DoubleSide });
+const mucus = new THREE.Mesh(extrude(profileShape(x => ys(x) + MUC, x => ys(x) + 0.002, -8, 8)), mucMat); mucus.renderOrder = 2; scene.add(mucus);
+
+// surface boundary highlight line
+const surfPts = []; for (let i = 0; i <= 120; i++) { const x = lerp(-2.2, 2.2, i / 120); surfPts.push(new THREE.Vector3(x, ys(x) + 0.002, 0.036)); }
+const surfMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(1.6, 0.9, 0.7), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
+const surfLine = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(surfPts), 240, 0.0045, 6, false), surfMat); scene.add(surfLine);
+
+// ---------- film ----------
+const NX = 140, NY = 12; const fx = [], fv = [], fz = [], idx = [];
+function addGrid(nu, nv, fn) {
+  const base = fx.length;
+  for (let j = 0; j <= nv; j++) for (let i = 0; i <= nu; i++) { const [x, r, z] = fn(i / nu, j / nv); fx.push(x); fv.push(r); fz.push(z); }
+  for (let j = 0; j < nv; j++) for (let i = 0; i < nu; i++) { const a = base + j * (nu + 1) + i, b = a + 1, c = a + nu + 1, d = c + 1; idx.push(a, b, d, a, d, c); }
+}
+const ux = u => lerp(-FW, FW, u);
+addGrid(NX, NY, (u, v) => [ux(u), v, 0]); addGrid(NX, NY, (u, v) => [ux(u), v, -1]);
+addGrid(NX, 6, (u, v) => [ux(u), 1, -v]); addGrid(NX, 6, (u, v) => [ux(u), 0, -v]);
+const filmGeo = new THREE.BufferGeometry(); const fPos = new Float32Array(fx.length * 3);
+filmGeo.setAttribute('position', new THREE.BufferAttribute(fPos, 3));
+filmGeo.setAttribute('rel', new THREE.BufferAttribute(new Float32Array(fv), 1)); filmGeo.setIndex(idx);
+const filmMat = new THREE.MeshPhysicalMaterial({ color: '#eab51a', roughness: 0.85, transparent: true, opacity: 1, side: THREE.DoubleSide, emissive: new THREE.Color('#ffb21a'), emissiveIntensity: 0, sheen: 0.3, sheenColor: new THREE.Color('#fff2b0') });
+const filmU = { uWave: { value: 0 }, uWaveP: { value: -1 }, uWave2P: { value: -1 }, uFront: { value: -1 }, uFrontAmt: { value: 0 } };
+filmMat.onBeforeCompile = sh => {
+  Object.assign(sh.uniforms, filmU);
+  sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nattribute float rel; varying float vRel;').replace('#include <begin_vertex>', '#include <begin_vertex>\nvRel = rel;');
+  sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nvarying float vRel; uniform float uWave, uWaveP, uWave2P, uFront, uFrontAmt;')
+    .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
+      float w1 = exp(-pow((vRel - uWaveP) / 0.13, 2.0));
+      float w2 = exp(-pow((vRel - uWave2P) / 0.10, 2.0)) * 0.7;
+      totalEmissiveRadiance += vec3(1.0, 0.86, 0.45) * uWave * (w1 + w2) * 2.2;
+      float fr = exp(-pow((vRel - uFront) / 0.045, 2.0));
+      totalEmissiveRadiance += vec3(1.0, 0.75, 0.55) * uFrontAmt * fr * 2.6;
+      totalEmissiveRadiance += vec3(1.0, 0.9, 0.7) * uFrontAmt * step(vRel, uFront) * 0.25;`);
+};
+const film = new THREE.Mesh(filmGeo, filmMat); film.renderOrder = 3; scene.add(film);
+const FLAT_B = ys(0) + MUC + 0.018;
+const sealAmt = t => t < T.seal0 ? 0 : t > T.seal1 ? 1 : eic((t - T.seal0) / (T.seal1 - T.seal0));
+const bounce = t => t > T.seal1 ? -0.006 * Math.exp(-(t - T.seal1) * 9) * Math.sin((t - T.seal1) * 38) : 0;
+const swell = t => eio(clamp((t - T.swell0) / (T.swell1 - T.swell0)));
+const edgeF = x => Math.pow(Math.max(0, 1 - Math.pow(Math.abs(x) / FW, 10)), 0.28);
+const filmBottom = (x, t) => lerp(FLAT_B, ys(x) + MUC - 0.002, 0.45 + 0.55 * sealAmt(t)) + bounce(t);
+function filmThick(x, t) {
+  const sw = swell(t);
+  const breathe = (t > T.swell0 && t < T.seal0) ? 0.006 * Math.sin((t - T.swell0) * Math.PI * 2 * 1.2) * sw : 0;
+  return (0.12 + 0.1 * sw + breathe - 0.012 * sealAmt(t) + 0.018 * sw * (1 - (x / FW) ** 2)) * edgeF(x);
+}
+const toWorldY = (x, u, t) => filmBottom(x, t) + u * filmThick(x, t);
+function updateFilm(t) {
+  for (let i = 0; i < fx.length; i++) { const x = fx[i]; fPos[i * 3] = x; fPos[i * 3 + 1] = filmBottom(x, t) + fv[i] * filmThick(x, t); fPos[i * 3 + 2] = fz[i]; }
+  filmGeo.attributes.position.needsUpdate = true; filmGeo.computeVertexNormals();
+}
+
+// ---------- HPMC chains ----------
+const chainMat = new THREE.MeshStandardMaterial({ color: '#fff7e6', emissive: new THREE.Color('#ffe7b0'), emissiveIntensity: 0.55, roughness: 0.3, transparent: true, opacity: 1 });
+const chains = [];
+for (let i = 0; i < 38; i++) {
+  const m = new THREE.Mesh(new THREE.BufferGeometry(), chainMat); m.frustumCulled = false; m.renderOrder = 4; scene.add(m);
+  chains.push({ m, cx: R(-1.45, 1.45), cu: R(0.18, 0.82), L: R(0.28, 0.5), ph: R(0, 6.28), ph2: R(0, 6.28), ph3: R(0, 6.28), d: R(0, 0.35) });
+}
+function buildChain(c, t) {
+  const h = clamp(swell(t) * 1.35 - c.d);
+  const he = eio(h);
+  const pts = [];
+  for (let k = 0; k <= 36; k++) {
+    const s = k / 36, a = k * 1.05 + c.ph;
+    const xd = c.cx + 0.016 * Math.cos(a) + (s - 0.5) * 0.035, ud = c.cu + 0.1 * Math.sin(a);
+    const xe = c.cx + (s - 0.5) * c.L + 0.045 * Math.sin(k * 0.45 + c.ph), ue = clamp(c.cu + 0.3 * Math.sin(k * 0.32 + c.ph2), 0.08, 0.92);
+    const x = clamp(lerp(xd, xe, he), -FW + 0.06, FW - 0.06), u = lerp(ud, ue, he);
+    pts.push(new THREE.Vector3(x, toWorldY(x, u, t), 0.007 + 0.014 * (0.5 + 0.5 * Math.sin(k * 0.7 + c.ph3))));
+  }
+  c.m.geometry.dispose();
+  c.m.geometry = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 72, lerp(0.0062, 0.0048, he), 6, false);
+}
+
+// ---------- water molecules ----------
+const NWAT = 260;
+const watMat = new THREE.MeshPhysicalMaterial({ color: '#5bbcff', roughness: 0.1, clearcoat: 1, emissive: new THREE.Color('#3a9cff'), emissiveIntensity: 0.6 });
+const sphereGeo = new THREE.SphereGeometry(1, 20, 14);
+const wat = new THREE.InstancedMesh(sphereGeo, watMat, NWAT); wat.frustumCulled = false; scene.add(wat);
+const waters = []; for (let i = 0; i < NWAT; i++) {
+  const side = rnd(); const tx = R(-1.5, 1.5);
+  waters.push({ tx, tu: R(0.05, 0.95), z: R(0.01, 0.034), t0: R(T.swell0 - 0.2, T.swell1 - 0.3), dur: R(0.45, 0.8), sx: side < 0.2 ? -FW - R(0.1, 0.5) : side < 0.4 ? FW + R(0.1, 0.5) : tx + R(-0.15, 0.15), sy: side < 0.4 ? R(0.7, 0.95) : ys(tx) + MUC + R(0.0, 0.03), ph: R(0, 6.28), r: R(0.0045, 0.0065) });
+}
+
+// ---------- saliva droplets ----------
+const dropMat = new THREE.MeshPhysicalMaterial({ color: '#46aefc', roughness: 0.02, clearcoat: 1, clearcoatRoughness: 0, transparent: true, opacity: 0.82, emissive: new THREE.Color('#1d74e0'), emissiveIntensity: 0.35, envMapIntensity: 2.2, ior: 1.33 });
+const drops = [];
+for (let i = 0; i < 26; i++) {
+  const side = i % 3; const tx = side === 0 ? R(-1.6, -0.3) : side === 1 ? R(0.3, 1.6) : R(-1.3, 1.3);
+  const start = side === 0 ? [R(-3.4, -2.3), R(0.55, 1.25), R(0.08, 0.35)] : side === 1 ? [R(2.3, 3.4), R(0.55, 1.25), R(0.08, 0.35)] : [tx + R(-0.4, 0.4), R(0.25, 0.55), R(0.25, 0.4)];
+  const m = new THREE.Mesh(sphereGeo, dropMat); scene.add(m);
+  const halo = new THREE.Sprite(spriteMat('#8fd2ff')); scene.add(halo);
+  drops.push({ m, halo, tx, tz: R(0.03, 0.12), start, r: R(0.035, 0.07), t0: R(T.drop0, T.drop1 - 0.6), dur: R(0.55, 0.8), tu: rnd() });
+}
+
+// ---------- mucoadhesion strands ----------
+const strandMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.75, 1.0, 1.1), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, opacity: 0.9 });
+const strands = [];
+for (let i = 0; i < 70; i++) {
+  const m = new THREE.Mesh(new THREE.BufferGeometry(), strandMat); m.frustumCulled = false; scene.add(m);
+  strands.push({ m, x0: R(-1.5, 1.5), dir: rnd() < 0.5 ? -1 : 1, L: R(0.25, 0.6), k: R(3, 7), ph: R(0, 6.28), k2: R(2, 5), ph2: R(0, 6.28), d: R(0, 0.5), rad: R(0.0025, 0.0042) });
+}
+const TSEG = 56, RSEG = 5;
+function buildStrand(s, t) {
+  const pts = [];
+  for (let k = 0; k <= 24; k++) {
+    const u = k / 24; const x = clamp(s.x0 + s.dir * s.L * u, -FW + 0.05, FW - 0.05);
+    const weave = ys(x) + MUC * (0.5 + 0.42 * Math.sin(u * Math.PI * s.k + s.ph));
+    pts.push(new THREE.Vector3(x, lerp(filmBottom(s.x0, t) + 0.015, weave, sstep(0, 0.22, u)), 0.006 + 0.02 * (0.5 + 0.5 * Math.sin(u * Math.PI * s.k2 + s.ph2))));
+  }
+  s.m.geometry.dispose(); s.m.geometry = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), TSEG, s.rad, RSEG, false);
+}
+const pulseL = new THREE.Sprite(spriteMat('#fff4d6')), pulseR = new THREE.Sprite(spriteMat('#fff4d6')), pulseC = new THREE.Sprite(spriteMat('#fff4d6'));
+scene.add(pulseL, pulseR, pulseC);
+
+// ---------- active ingredients ----------
+const PCOL = ['#eef1f7', '#b27cff', '#ff9a3c', '#45c2ff', '#4fe08a'];
+const pMats = PCOL.map(c => new THREE.MeshPhysicalMaterial({ color: c, roughness: 0.15, clearcoat: 1, clearcoatRoughness: 0.05, emissive: new THREE.Color(c), emissiveIntensity: 0.12 }));
+const PER = 14; const parts = [];
+for (let g = 0; g < 5; g++) for (let k = 0; k < PER; k++) parts.push({ g, x: R(-1.42, 1.42), u: R(0.15, 0.85), r: R(0.016, 0.024), z: R(0.012, 0.03), dx: R(-0.05, 0.05), wob: R(0, 6.28) });
+const pInst = PCOL.map((c, g) => { const m = new THREE.InstancedMesh(sphereGeo, pMats[g], PER); m.frustumCulled = false; scene.add(m); return m; });
+const TR = 7;
+const trail = new THREE.InstancedMesh(sphereGeo, new THREE.MeshBasicMaterial({ transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }), parts.length * TR); trail.frustumCulled = false;
+trail.instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(parts.length * TR * 3), 3); scene.add(trail);
+const pools = parts.map(p => { const s = new THREE.Sprite(spriteMat(PCOL[p.g])); scene.add(s); return s; });
+// progressive release: a front climbs the gel; ingredients leave only once the front reaches them
+const frontAt = t => Math.pow(clamp((t - T.rel0) / T.relDur), 0.85);
+const hiOut = g => 5.3 + 0.5 * g;
+const hiStart = g => remap(hiOut(g));
+const relTime = p => hiStart(p.g) + 0.06 + 0.3 * p.u;
+function partState(p, t) {
+  const t0 = relTime(p); const k = clamp((t - t0) / T.drift); const e = eio(k);
+  const hi = win(t, hiStart(p.g), hiStart(p.g) + 0.95, 0.2);
+  const glow = Math.max(sstep(t0 - 0.15, t0 + 0.05, t), 0.6 * hi);
+  const scale = p.r * (1 + 0.3 * glow + 0.25 * hi);
+  const x = p.x + p.dx * e + 0.012 * Math.sin(p.wob + t * 3) * (1 - e);
+  const yIn = toWorldY(p.x, p.u, t);
+  const y = lerp(yIn, ys(x) + scale + 0.003, e); // rests ON the gum surface, never below
+  return { x, y, z: p.z, scale, k, hi };
+}
+
+// ---------- hero spheres ----------
+const heroFinal = [[-1.52, 1.42, 3.0], [-0.76, 1.42, 3.0], [0.0, 1.42, 3.0], [0.76, 1.42, 3.0], [1.52, 1.42, 3.0]];
+const heroes = PCOL.map((c, g) => {
+  const m = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 48), new THREE.MeshPhysicalMaterial({ color: c, roughness: 0.08, clearcoat: 1, clearcoatRoughness: 0.02, emissive: new THREE.Color(c), emissiveIntensity: 0.3, iridescence: 0.3, sheen: 0.4, sheenColor: new THREE.Color('#ffffff'), fog: false }));
+  m.visible = false; scene.add(m);
+  const halo = new THREE.Sprite(spriteMat(c, 0, false)); scene.add(halo);
+  const cand = parts.map((p, i) => [p, i]).filter(([p]) => p.g === g);
+  cand.sort((a, b) => Math.abs(a[0].x - heroFinal[g][0] * 0.6) - Math.abs(b[0].x - heroFinal[g][0] * 0.6));
+  return { m, halo, pi: cand[0][1], slot: g };
+});
+const bokeh = [];
+for (let i = 0; i < 46; i++) { const s = new THREE.Sprite(spriteMat(new THREE.Color().setHSL(R(0.97, 1.08) % 1, 0.8, R(0.82, 0.92)), R(0.12, 0.32), false)); scene.add(s); bokeh.push({ s, p: [R(-9, 9), R(-2, 6), R(-9, -3)], sc: R(0.2, 0.9), ph: R(0, 6.28) }); }
+
+// ---------- post ----------
+const composer = new EffectComposer(renderer); composer.setSize(W, H);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(W, H), 0.4, 0.5, 1.15); composer.addPass(bloom);
+composer.addPass(new OutputPass());
+const finalPass = new ShaderPass({
+  uniforms: { tDiffuse: { value: null }, uSweep: { value: -2 }, uSweepAmt: { value: 0 }, uFlare: { value: 0 }, uWhite: { value: 0 }, uFlarePos: { value: new THREE.Vector2(0.95, 0.55) }, uAspect: { value: W / H } },
+  vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0); }',
+  fragmentShader: `uniform sampler2D tDiffuse; uniform float uSweep, uSweepAmt, uFlare, uAspect, uWhite; uniform vec2 uFlarePos; varying vec2 vUv;
+    void main(){ vec4 c = texture2D(tDiffuse, vUv);
+      float d = (vUv.x + vUv.y * 0.42) - uSweep;
+      c.rgb += uSweepAmt * (exp(-d*d/0.0035) * vec3(1.0,0.96,0.86) + exp(-d*d/0.05) * vec3(1.0,0.85,0.7) * 0.35);
+      vec2 p = (vUv - uFlarePos) * vec2(uAspect, 1.0); float r = length(p);
+      vec3 fl = exp(-r*r/0.012) * vec3(1.0,0.96,0.9) * 1.3 + exp(-abs(p.y)*90.0) * exp(-abs(p.x)*1.2) * vec3(1.0,0.86,0.72) * 0.9 + exp(-abs(r-0.22)*40.0) * vec3(1.0,0.8,0.85) * 0.12 + vec3(1.0,0.95,0.92) * 0.06;
+      c.rgb += uFlare * fl;
+      float v = smoothstep(1.25, 0.35, length((vUv - 0.5) * vec2(uAspect, 1.0))); c.rgb *= mix(0.86, 1.0, v);
+      c.rgb = mix(c.rgb, vec3(1.0, 0.97, 0.94), uWhite);
+      gl_FragColor = vec4(c.rgb, 1.0); }`
+});
+composer.addPass(finalPass);
+
+// ---------- opening: dental arch front view with the film in place ----------
+const TSW = 1.4; // source time of the switch into the cross-section (hidden by a white flash)
+const OZ = -60;
+const opening = new THREE.Group(); scene.add(opening);
+const zArch = x => 0.32 - 0.09 * x * x;
+function archTeeth(widths) { const tot = widths.reduce((a, b) => a + b, 0); let x = -tot / 2; return widths.map(w => { const c = { x0: x, w, xc: x + w / 2 }; x += w; return c; }); }
+const UP = archTeeth([0.36, 0.4, 0.43, 0.48, 0.56, 0.56, 0.48, 0.43, 0.4, 0.36]);
+const LO = archTeeth([0.34, 0.37, 0.4, 0.36, 0.33, 0.33, 0.36, 0.4, 0.37, 0.34]);
+const scallop = (arr, x, amp) => { for (const c of arr) if (x >= c.x0 && x <= c.x0 + c.w) return amp * Math.sin(Math.PI * (x - c.x0) / c.w); return 0; };
+function gumSurface(arr, yLine, yFar, sign) {
+  const nx = 160, nv = 40, pos = [], uv = [], idx = [];
+  for (let j = 0; j <= nv; j++) for (let i = 0; i <= nx; i++) {
+    const x = lerp(-3.8, 3.8, i / nx), v = j / nv;
+    const gl = yLine + sign * scallop(arr, x, 0.13);
+    const y = lerp(gl, yFar, v);
+    let z = zArch(x) - 0.025 * (1 - sstep(0, 0.1, v)) - 0.3 * sstep(0.7, 1, v);
+    for (const c of arr) z += 0.035 * Math.pow(Math.max(0, Math.cos(Math.PI * (x - c.xc) / c.w)), 2) * (1 - sstep(0.2, 0.75, v));
+    pos.push(x, y, z); uv.push(x * 0.5, y * 0.5);
+  }
+  for (let j = 0; j < nv; j++) for (let i = 0; i < nx; i++) { const a = j * (nx + 1) + i, b = a + 1, c = a + nx + 1, d = c + 1; idx.push(a, b, d, a, d, c); }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2)); g.setIndex(idx); g.computeVertexNormals(); return g;
+}
+const oGumMat = new THREE.MeshPhysicalMaterial({ color: '#ec5f73', roughness: 0.45, clearcoat: 0.55, clearcoatRoughness: 0.3, sheen: 0.5, sheenColor: new THREE.Color('#ffd6da'), side: THREE.DoubleSide, bumpMap: gumBump, bumpScale: 0.6 });
+const upGum = new THREE.Mesh(gumSurface(UP, 0.0, 1.7, 1), oGumMat); opening.add(upGum);
+const loGum = new THREE.Mesh(gumSurface(LO, -1.32, -2.9, -1), oGumMat); loGum.position.z = -0.1; opening.add(loGum);
+const toothMat = new THREE.MeshPhysicalMaterial({ color: '#e4ded3', roughness: 0.26, clearcoat: 0.7, clearcoatRoughness: 0.12, sheen: 0.2, sheenColor: new THREE.Color('#ffffff') });
+function tooth(w, h, up) {
+  const g = new RoundedBoxGeometry(w * 0.95, h, 0.3, 5, 0.11); const p = g.attributes.position;
+  for (let i = 0; i < p.count; i++) {
+    let x = p.getX(i), y = p.getY(i), z = p.getZ(i);
+    const k = up ? (h / 2 - y) / h : (y + h / 2) / h; // 0 at root end, 1 at biting edge
+    x *= lerp(0.8, 1.0, Math.min(1, k * 1.6));
+    if (z > 0) z += 0.05 * (1 - Math.min(1, (x / (w * 0.48)) ** 2));
+    p.setXYZ(i, x, y, z);
+  }
+  g.computeVertexNormals(); return g;
+}
+const upTeeth = UP.map((c, i) => {
+  const h = (i === 4 || i === 5) ? 0.98 : (i === 3 || i === 6) ? 0.9 : 0.86;
+  const m = new THREE.Mesh(tooth(c.w, h, true), toothMat);
+  m.position.set(c.xc, 0.45 - h / 2, zArch(c.xc) - 0.27); m.rotation.y = Math.atan(0.18 * c.xc); opening.add(m); return m;
+});
+LO.forEach(c => { const h = 0.84; const m = new THREE.Mesh(tooth(c.w, h, false), toothMat); m.position.set(c.xc, -1.75 + h / 2, zArch(c.xc) - 0.4); m.rotation.y = Math.atan(0.18 * c.xc); opening.add(m); });
+// film: covers the whole attached gum above one tooth and the upper half of that tooth's crown
+const FX0 = UP[5].xc, FX1 = UP[7].x0 + UP[7].w; // half of one tooth + two full teeth = 2.5 teeth wide
+const OF = new THREE.Vector3((FX0 + FX1) / 2, 0, 0);
+const filmO = (() => {
+  const n = 64, wF = FX1 - FX0, y0 = -0.17, y1 = 1.22, pos = [], idx = [];
+  opening.updateMatrixWorld(true);
+  const rc = new THREE.Raycaster(); const hits = [upGum, ...upTeeth];
+  const zs = [];
+  for (let j = 0; j <= n; j++) for (let i = 0; i <= n; i++) {
+    const x = FX0 + wF * i / n, y = lerp(y0, y1, j / n);
+    rc.set(new THREE.Vector3(x, y, 5), new THREE.Vector3(0, 0, -1)); const h = rc.intersectObjects(hits, false)[0];
+    zs.push(h ? h.point.z : zArch(x)); pos.push(x, y, 0);
+  }
+  const base = zs.slice(); let cur = zs.slice();
+  for (let it = 0; it < 4; it++) { const nx = cur.slice(); for (let j = 1; j < n; j++) for (let i = 1; i < n; i++) { const k = j * (n + 1) + i; nx[k] = Math.max(base[k], (cur[k] * 2 + cur[k - 1] + cur[k + 1] + cur[k - n - 1] + cur[k + n + 1]) / 6); } cur = nx; }
+  for (let k = 0; k < cur.length; k++) pos[k * 3 + 2] = cur[k] + 0.014;
+  for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) { const a = j * (n + 1) + i, b = a + 1, c = a + n + 1, d = c + 1; idx.push(a, b, d, a, d, c); }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setIndex(idx); g.computeVertexNormals();
+  return new THREE.Mesh(g, new THREE.MeshPhysicalMaterial({ color: '#f7a200', roughness: 0.3, clearcoat: 0.8, clearcoatRoughness: 0.15, transparent: true, opacity: 0.88, side: THREE.DoubleSide, emissive: new THREE.Color('#ff9800'), emissiveIntensity: 0.1 }));
+})();
+opening.add(filmO);
+{ const back = new THREE.Mesh(new THREE.PlaneGeometry(14, 8), new THREE.MeshBasicMaterial({ color: '#7a2433' })); back.position.set(0, -0.6, -0.9); opening.add(back); }
+opening.position.z = OZ;
+
+// ---------- camera ----------
+const keys = [
+  [0.0, [0.6, 6.4, 8.6], [0, 0.7, 0]],
+  [0.92, [2.1, 1.5, 2.6], [1.4, 0.85, 0.6]],
+  [1.5, [0.0, 1.15, 2.7], [0, 0.82, 0]],
+  [4.55, [-0.4, 1.1, 1.12], [-0.4, 1.0, 0]],
+  [5.15, [0.95, 1.0, 0.95], [0.8, 0.93, 0]],
+  [6.35, [0.72, 0.99, 0.85], [0.64, 0.93, 0]],
+  [6.95, [0.5, 1.14, 2.15], [0.55, 0.96, 0]],
+  [11.85, [0.32, 1.12, 2.0], [0.42, 0.95, 0]],
+  [12.9, [0, 1.75, 7.3], [0, 1.2, 0]],
+  [15.0, [0, 1.68, 6.8], [0, 1.2, 0]],
+];
+const eases = [eic, eio, x => lerp(x, eio(x), 0.6), eio, x => lerp(x, eio(x), 0.5), eio, x => lerp(x, eio(x), 0.4), eio, x => lerp(x, eio(x), 0.5)];
+const v3 = a => new THREE.Vector3(...a);
+function camAt(t) {
+  let i = 0; while (i < keys.length - 2 && t > keys[i + 1][0]) i++;
+  const [ta, pa, qa] = keys[i], [tb, pb, qb] = keys[i + 1]; const u = eases[i](clamp((t - ta) / (tb - ta)));
+  return [v3(pa).lerp(v3(pb), u), v3(qa).lerp(v3(qb), u)];
+}
+
+// ---------- UI ----------
+const $ = id => document.getElementById(id);
+function show(el, a, dy = 18, extra = '') { el.style.opacity = a; el.style.transform = `${extra} translateY(${(1 - a) * dy}px)`; }
+const toScreen = v => { const p = v.clone().project(camera); return [(p.x * 0.5 + 0.5) * 1920, (-p.y * 0.5 + 0.5) * 1080]; };
+// output seconds -> source timeline seconds (scene times per spec)
+const MAP = [[0, 0], [1.0, 1.5], [3.0, 4.6], [5.0, 6.6], [8.0, 11.8], [10, 15]];
+function remap(o) { for (let k = 0; k < MAP.length - 1; k++) { const [o0, s0] = MAP[k], [o1, s1] = MAP[k + 1]; if (o <= o1) return s0 + (s1 - s0) * (o - o0) / (o1 - o0); } return 15; }
+
+// ---------- frame ----------
+const dummy = new THREE.Object3D(); const tmpC = new THREE.Color();
+window.renderAt = function (out) {
+  const t = remap(out);
+  const [cp, cq] = camAt(t);
+  const shake = t > T.seal1 ? 0.006 * Math.exp(-(t - T.seal1) * 8) : 0;
+  cp.x += shake * Math.sin(t * 90); cp.y += shake * Math.cos(t * 77);
+  camera.position.copy(cp); camera.lookAt(cq);
+  opening.visible = t < TSW;
+  if (t < TSW) { // front view: film placed over the gum and the upper half of a tooth, then push in
+    const u = clamp(t / TSW); const e = u < 0.45 ? 0.25 * eio(u / 0.45) : 0.25 + 0.75 * eic((u - 0.45) / 0.55);
+    camera.position.set(lerp(0.3, OF.x + 0.15, e), lerp(-0.3, 0.3, e), OZ + lerp(5.2, 1.35, e));
+    camera.lookAt(lerp(0.25, OF.x + 0.02, e), lerp(-0.3, 0.2, e), OZ + lerp(0, 0.3, e));
+  }
+  camera.updateMatrixWorld();
+  finalPass.uniforms.uWhite.value = 0.92 * sstep(TSW - 0.2, TSW, t) * (1 - sstep(TSW, TSW + 0.25, t));
+
+  const cutZ = t < T.cut0 ? 14 : t > T.cut1 ? 0 : lerp(14, 0, eio((t - T.cut0) / (T.cut1 - T.cut0)));
+  gum.position.z = mucus.position.z = cutZ; gum.scale.z = mucus.scale.z = cutZ + 6;
+  const ff = Math.min(1.5, cutZ); film.position.z = ff; film.scale.z = ff + 1.5;
+
+  const sw = swell(t);
+  filmMat.color.set('#f5b000').lerp(tmpC.set('#ffcc1f'), sw);
+  filmMat.roughness = lerp(0.88, 0.06, sw); filmMat.clearcoat = sw; filmMat.clearcoatRoughness = 0.04;
+  filmMat.opacity = lerp(1.0, 0.58, sw);
+  filmMat.emissiveIntensity = 0.02 + 0.45 * sw + (t > T.seal1 ? 0.3 * Math.exp(-(t - T.seal1) * 6) : 0);
+  filmMat.depthWrite = sw < 0.3;
+  const wv = clamp((t - T.swell0) / (T.swell1 - T.swell0));
+  filmU.uWave.value = sstep(T.swell0, T.swell0 + 0.3, t) * (1 - sstep(T.swell1 - 0.2, T.swell1 + 0.2, t));
+  filmU.uWaveP.value = lerp(-0.3, 1.3, (wv * 1.8) % 1); filmU.uWave2P.value = lerp(-0.3, 1.3, ((wv * 1.8) + 0.5) % 1);
+  filmU.uFrontAmt.value = 0;
+  updateFilm(t);
+
+  const pulse = t > T.seal1 ? Math.exp(-(t - T.seal1) * 5) : 0;
+  mucMat.emissiveIntensity = 0.05 + 0.25 * sstep(T.str0, T.seal1, t) * (1 - 0.5 * sstep(6.4, 7.4, t)) + 0.6 * pulse;
+  mucMat.opacity = 0.26 + 0.12 * sstep(T.str0, T.seal1, t);
+  surfMat.opacity = 0.9 * win(out, 6.2, 8.3, 0.3);
+
+  // chains
+  chainMat.opacity = (1 - 0.5 * sstep(6.6, 7.4, t)) * (1 - sstep(11.9, 12.5, t)); chainMat.emissiveIntensity = 0.35 + 0.5 * sw;
+  for (const c of chains) { c.m.visible = t > 1.2 && t < 12.6; if (c.m.visible) buildChain(c, t); }
+
+  // water
+  for (let i = 0; i < NWAT; i++) {
+    const w = waters[i]; const k = clamp((t - w.t0) / w.dur); const e = eoc(k);
+    const ty = toWorldY(w.tx, w.tu, t);
+    const x = lerp(w.sx, w.tx, e) + 0.006 * Math.sin(t * 4 + w.ph) * k, y = lerp(w.sy, ty, e) + 0.004 * Math.cos(t * 5 + w.ph) * k;
+    const s = k > 0 ? w.r * (1 - sstep(11.9, 12.4, t)) : 0;
+    dummy.position.set(x, y, w.z); dummy.scale.setScalar(s); dummy.updateMatrix(); wat.setMatrixAt(i, dummy.matrix);
+  }
+  wat.instanceMatrix.needsUpdate = true;
+
+  // saliva
+  for (const d of drops) {
+    const k = clamp((t - d.t0) / d.dur); const tb = filmBottom(d.tx, t);
+    const target = [d.tx, tb + 0.01 + d.tu * 0.04, d.tz];
+    const mid = [(d.start[0] + target[0]) / 2, Math.max(d.start[1], target[1]) + 0.25, (d.start[2] + target[2]) / 2];
+    const e = eoc(k); const q = (a, b, c) => (1 - e) * (1 - e) * a + 2 * (1 - e) * e * b + e * e * c;
+    const absorb = sstep(0.82, 1.0, k); const sc = d.r * (1 - absorb) * (k > 0 ? 1 : 0) * (1 + 0.08 * Math.sin(t * 14 + d.t0 * 9));
+    d.m.visible = sc > 0.0005;
+    d.m.position.set(q(d.start[0], mid[0], target[0]), q(d.start[1], mid[1], target[1]), q(d.start[2], mid[2], target[2]));
+    d.m.scale.set(sc * (1 + 0.25 * absorb), sc * (1 - 0.3 * absorb), sc);
+    d.halo.position.set(target[0], target[1] - 0.005, target[2] + 0.02);
+    const hk = sstep(0.8, 0.92, k) * (1 - sstep(0.95, 1.6, (t - d.t0) / d.dur));
+    d.halo.material.opacity = 0.75 * hk; d.halo.scale.setScalar(0.08 + 0.16 * hk);
+  }
+
+  // strands
+  for (const s of strands) {
+    const g = clamp((t - (T.str0 + s.d)) / 0.6); s.m.visible = g > 0 && t < 12.6;
+    if (g > 0 && (t < 6.4 || !s.built)) { buildStrand(s, Math.min(t, 6.4)); s.built = t >= 6.4; }
+    if (g > 0) s.m.geometry.setDrawRange(0, Math.floor(eoc(g) * TSEG) * RSEG * 6);
+  }
+  strandMat.opacity = 0.95 * (1 - 0.55 * sstep(6.4, 7.4, t)) * (1 - sstep(11.9, 12.4, t));
+
+  const pk = clamp((t - T.seal1) / 0.9), pxp = eoc(pk) * 1.7, po = t > T.seal1 ? (1 - pk) : 0;
+  pulseL.position.set(-pxp, ys(-pxp) + MUC * 0.6, 0.03); pulseR.position.set(pxp, ys(pxp) + MUC * 0.6, 0.03);
+  pulseL.material.opacity = pulseR.material.opacity = 0.9 * po; pulseL.scale.set(0.35, 0.12, 1); pulseR.scale.set(0.35, 0.12, 1);
+  pulseC.position.set(0.7, ys(0.7) + MUC, 0.04); pulseC.material.opacity = 0.8 * (t > T.seal1 ? Math.exp(-(t - T.seal1) * 7) : 0); pulseC.scale.set(0.5, 0.16, 1);
+
+  // ingredients
+  const cnt = [0, 0, 0, 0, 0];
+  parts.forEach((p, i) => {
+    const s = partState(p, t); let sc = s.scale;
+    const hero = heroes.find(h => h.pi === i);
+    if (hero && t > T.hero + hero.slot * 0.07) sc = 0;
+    dummy.position.set(s.x, s.y, s.z); dummy.scale.setScalar(sc); dummy.updateMatrix(); pInst[p.g].setMatrixAt(cnt[p.g]++, dummy.matrix);
+    for (let j = 0; j < TR; j++) {
+      const sj = partState(p, t - (j + 1) * 0.03);
+      const moving = sj.k > 0 && sj.k < 1 ? 1 : (s.k > 0 && s.k < 1 ? 0.6 : 0);
+      const f = (1 - j / TR) * moving * (sc > 0 ? 1 : 0);
+      dummy.position.set(sj.x, sj.y, sj.z + 0.001); dummy.scale.setScalar(sj.scale * (1.25 - j * 0.09)); dummy.updateMatrix();
+      trail.setMatrixAt(i * TR + j, dummy.matrix); trail.setColorAt(i * TR + j, tmpC.set(PCOL[p.g]).multiplyScalar(0.55 * f));
+    }
+    const land = sstep(0.85, 1.0, s.k) * (1 - sstep(12.0, 12.6, t));
+    pools[i].position.set(s.x, ys(s.x) + 0.006, s.z + 0.002); pools[i].scale.set(0.11 + 0.05 * land + 0.06 * s.hi, 0.03, 1);
+    pools[i].material.opacity = (0.6 + 0.4 * s.hi) * land;
+  });
+  pInst.forEach(m => { m.instanceMatrix.needsUpdate = true; });
+  trail.instanceMatrix.needsUpdate = true; trail.instanceColor.needsUpdate = true;
+  pMats.forEach((m, g) => { m.emissiveIntensity = 0.12 + 0.5 * sstep(T.rel0, T.rel0 + 0.5, t) + 1.6 * win(t, hiStart(g), hiStart(g) + 0.95, 0.2); });
+
+  // heroes
+  heroes.forEach((h, g) => {
+    const tb = T.hero + h.slot * 0.07; const k = clamp((t - tb) / 0.65); h.m.visible = t > tb;
+    const p0 = partState(parts[h.pi], tb);
+    const pos = v3([p0.x, p0.y, p0.z]).lerp(v3(heroFinal[h.slot]), eoc(k)); pos.y += 0.05 * Math.sin(t * 2.2 + g) * k;
+    h.m.position.copy(pos); const rr = lerp(p0.scale, 0.33, eob(clamp((t - tb) / 0.5))); h.m.scale.setScalar(rr); h.m.rotation.y = t * 0.6;
+    h.halo.position.copy(pos).add(new THREE.Vector3(0, 0, -0.05));
+    const flash = t > tb ? Math.exp(-(t - tb) * 6) : 0; h.halo.material.opacity = t > tb ? 0.32 + 0.65 * flash : 0; h.halo.scale.setScalar(rr * (3.0 + 4 * flash));
+    h.screen = toScreen(pos); h.rs = toScreen(pos.clone().add(new THREE.Vector3(rr, 0, 0)))[0] - h.screen[0];
+  });
+  scene.fog.density = 0.16 * sstep(T.fog0, T.fog1, t);
+  bokeh.forEach(b => { b.s.position.set(b.p[0] + 0.3 * Math.sin(t * 0.4 + b.ph), b.p[1] + 0.2 * Math.cos(t * 0.5 + b.ph), b.p[2]); b.s.scale.setScalar(b.sc); });
+
+  finalPass.uniforms.uSweep.value = lerp(-0.6, 1.8, clamp((t - T.sweep0) / 0.45));
+  finalPass.uniforms.uSweepAmt.value = sstep(T.sweep0 - 0.05, T.sweep0 + 0.05, t) * (1 - sstep(T.sweep0 + 0.35, T.sweep0 + 0.45, t)) * 1.3;
+  finalPass.uniforms.uFlare.value = 0.38 * sstep(T.flare0, T.flare0 + 0.3, t) * (1 - 0.4 * sstep(14.7, 15, t));
+  bloom.strength = 0.38 + 0.18 * sstep(6.8, 7.3, t) + 0.25 * sstep(12, 12.8, t);
+
+  // ---- UI (output time) ----
+  show($('st1'), win(out, 1.0, 3.0, 0.3)); show($('st2'), win(out, 3.0, 5.0, 0.3)); show($('st3'), win(out, 5.0, 8.0, 0.3));
+  for (let g = 0; g < 5; g++) {
+    const el = $('r' + g); const a = win(out, hiOut(g) - 0.15, 8.0, 0.3); const hi = win(out, hiOut(g), hiOut(g) + 0.55, 0.15);
+    el.style.opacity = a; el.style.transform = `translateY(${(1 - a) * -24}px) scale(${1 + 0.05 * hi})`;
+    el.style.boxShadow = `0 8px 28px rgba(200,40,80,.22), 0 0 0 ${4 * hi}px ${PCOL[g]}`;
+  }
+  show($('sf'), win(out, 6.3, 8.0, 0.3), 14);
+  const labA = win(out, 8.25, 10.6, 0.3);
+  heroes.forEach((h, g) => { const el = $('l' + g); const [x, y] = h.screen; el.style.left = x + 'px'; el.style.top = (y + h.rs + 50) + 'px'; el.style.opacity = labA; });
+  { const a = win(out, 8.5, 10.6, 0.3); const el = $('tg'); el.style.opacity = a; el.style.transform = `translateX(-50%) translateY(${(1 - a) * 18}px)`; }
+
+  composer.render();
+  return true;
+};
+document.fonts.ready.then(async () => {
+  await Promise.all(['500', '700', '900'].map(w => document.fonts.load(`${w} 20px KR`, '가나')).concat(['700', '900'].map(w => document.fonts.load(`${w} 20px KRL`, 'Ab'))));
+  window.ready = true;
+});
+</script></body></html>
